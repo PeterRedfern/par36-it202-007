@@ -20,7 +20,7 @@ function bePositive($arr) {
 }
     //end edits
     
-    //displays the output along with their type
+    //displays the output along with their types
     $mappedOutput = array_map(function($o) {
         $type = strtoupper(substr(gettype($o), 0, 1));
         return "$o ($type)";
