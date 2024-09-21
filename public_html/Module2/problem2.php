@@ -10,6 +10,9 @@ function getTotal($arr) {
     //note: use the $arr variable, don't directly touch $a1-$a4
     //TODO do adding here
     //TODO do rounding stuff here (round to two decimals i.e., 0.10, 0.01, 0.00)
+    $number = array_sum($arr); // par36 (9/21/24) - Computes the total of numbers in each array
+    $roundedNumber = round($number, 2); // rounds each number to two decimal places
+    $total = $roundedNumber; // gives the total variable the attribute of the rounded sum of the floats
     
     //end edits
     echo "The total is $total";
