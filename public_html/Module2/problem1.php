@@ -9,7 +9,13 @@ function processArray($arr) {
     //start edits
     //note: use the $arr variable to iterate over, don't directly touch $a1-$a4
     //TODO add logic here to echo out only odd values
-    //end edits
+    $arrayLength = count($arr); // par36 (9/21/24) - puts the array length into a variable
+
+    for ($i = 0; $i < $arrayLength; $i++) { // par36 (9/21/24) - loops through the array by length
+        if($arr[$i] % 2 != 0) { // checks if number is odd
+        echo $arr[$i] . "\n"; // prints number from the array
+    }
+    }
 }
 echo "Problem 1: Odd Output<br>";
 ?>
