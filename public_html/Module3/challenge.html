@@ -7,7 +7,6 @@
     <script>
         window.addEventListener("load", () => {
             console.log("loaded via javascript");
-            //TODO: add any extra onload processing you may need here (hint: you'll likely want to start here for the JS challenge)
         });
         function getCurrentSelection() {
             setTimeout(() => {
@@ -53,6 +52,18 @@
 
         nav { /* par36 - 9/28/24: Changes the background of nav to green */
         background-color: green; 
+        }
+
+        body { /* par36 - 9/28/24: Changes the background of the page to light blue (additional styling) */
+        background-color: mediumturquoise;
+        }
+
+        h1::first-letter { /* par36 - 9/28/24: Changes the first letter in the h1 tag to uppercase */
+        text-transform: uppercase;
+        }
+
+        a::first-letter { /* par36 - 9/28/24: Changes the first letter in the a tag to uppercase*/
+        text-transform: uppercase;
         }
     </style>
     <!-- make the necessary edits above this line -->
