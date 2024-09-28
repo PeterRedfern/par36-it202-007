@@ -7,6 +7,16 @@
     <script>
         window.addEventListener("load", () => {
             console.log("loaded via javascript");
+
+            const navLinks = document.querySelectorAll("nav a"); // par36 - 9/28/24: Sets a constant variable to get the data of and iterate through nav links
+            navLinks.forEach(link => { // performs iteration of each nav link
+                link.addEventListener("click", (event) => { // tracks when the link is clicked to update the tags
+                    const linkText = event.target.textContent; // gets the title of clicked link to update the text
+                    document.querySelector("h1").textContent = linkText; // updates the h1 tag  to the clicked link
+                    document.title = linkText; // updates the title tag to the clicked link
+                    updateCurrentPage(linkText.toLowerCase()); // makes the page title (on the tab) uppercase
+                });
+            });
         });
         function getCurrentSelection() {
             setTimeout(() => {
@@ -30,21 +40,19 @@
         
         nav a { /* par36 - 9/28/24: Keeps default color of nav links blue and underlined */
         text-decoration: underline;
-        list-style-type: none; /* Added to keep checkmark away due to ul li:before (not working yet) */
         color: blue; 
         }
 
         nav a:hover { /* par36 - 9/28/24: When nav link is hovered over, it turns purple */
         text-decoration: underline;
-        list-style-type: none; /* Added to keep checkmark away due to ul li:before (not working yet) */
         color: blueviolet; 
         }
-
-        ul { /* par36 - 9/28/24: Eliminates bullet points on the ul list */
+        
+        ul:not(nav ul) { /* par36 - 9/28/24: Eliminates bullet points on the ul list. Makes sure it doesn't apply to nav ul with the not selector */
         list-style-type: none;
         }
 
-        ul li:before { /* par36 - 9/28/24: Adds black checkmarks to the right of the start of each list */
+        ul:not(nav ul) li:before { /* par36 - 9/28/24: Adds black checkmarks to the right of the start of each list. Makes sure it doesn't apply to nav ul with the not selector */
         content: '✓'; 
         margin-right: 5px; 
         color: black; 
