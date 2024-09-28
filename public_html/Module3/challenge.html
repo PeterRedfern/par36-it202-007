@@ -19,7 +19,41 @@
         }
     </script>
     <style>
-        /* TODO: make style edits here */
+        nav ul { /* par36 - 9/28/24: Makes the navigation horizontal */
+        display: flex;
+        padding: 0; /* keeps list in place */
+        }
+
+        nav ul li { /* par36 - 9/28/24: Eliminates the bullet points and adds 15 point spacing between the words*/
+        list-style-type: none;
+        margin-right: 15px; 
+        }
+        
+        nav a { /* par36 - 9/28/24: Keeps default color of nav links blue and underlined */
+        text-decoration: underline;
+        list-style-type: none; /* Added to keep checkmark away due to ul li:before (not working yet) */
+        color: blue; 
+        }
+
+        nav a:hover { /* par36 - 9/28/24: When nav link is hovered over, it turns purple */
+        text-decoration: underline;
+        list-style-type: none; /* Added to keep checkmark away due to ul li:before (not working yet) */
+        color: blueviolet; 
+        }
+
+        ul { /* par36 - 9/28/24: Eliminates bullet points on the ul list */
+        list-style-type: none;
+        }
+
+        ul li:before { /* par36 - 9/28/24: Adds black checkmarks to the right of the start of each list */
+        content: '✓'; 
+        margin-right: 5px; 
+        color: black; 
+        }
+
+        nav { /* par36 - 9/28/24: Changes the background of nav to green */
+        background-color: green; 
+        }
     </style>
     <!-- make the necessary edits above this line -->
 
