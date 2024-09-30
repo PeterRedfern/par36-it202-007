@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <title>Problem 1</title>
+    <meta charset="utf-8" />
+    <script>
+        window.addEventListener("load", () => {
+            console.log("loaded via javascript");
+
+            const navLinks = document.querySelectorAll("nav a"); // par36 - 9/28/24: Sets a constant variable to get the data of and iterate through nav links
+            navLinks.forEach(link => { // performs iteration of each nav link
+                link.addEventListener("click", (event) => { // tracks when the link is clicked to update the tags
+                    const linkText = event.target.textContent; // gets the title of clicked link to update the text
+                    document.querySelector("h1").textContent = linkText; // updates the h1 tag  to the clicked link
+                    document.title = linkText; // updates the title tag to the clicked link
+                    updateCurrentPage(linkText.toLowerCase()); // makes the page title (on the tab) uppercase
+                });
+            });
+        });
+        function getCurrentSelection() {
+            setTimeout(() => {
+                //added this delay here as some solutions may require it to update properly (i.e., click code may complete before the navigation changes)
+                //TODO: add code for processing the current selection (this section isn't mandatory for all solutions)
+
+                //Note: likely you'll want to call updateCurrentPage towards the end.
+            }, 100);
+        }
+    </script>
+    <style>
+        nav ul { /* par36 - 9/28/24: Makes the navigation horizontal */
+        display: flex;
+        padding: 0; /* keeps list in place */
+        }
+
+        nav ul li { /* par36 - 9/28/24: Eliminates the bullet points and adds 15 point spacing between the words*/
+        list-style-type: none;
+        margin-right: 15px; 
+        }
+        
+        nav a { /* par36 - 9/28/24: Keeps default color of nav links blue and underlined */
+        text-decoration: underline;
+        color: blue; 
+        }
+
+        nav a:hover { /* par36 - 9/28/24: When nav link is hovered over, it turns purple */
+        text-decoration: underline;
+        color: blueviolet; 
+        }
+        
+        ul:not(nav ul) { /* par36 - 9/28/24: Eliminates bullet points on the ul list. Makes sure it doesn't apply to nav ul with the not selector */
+        list-style-type: none;
+        }
+
+        ul:not(nav ul) li:before { /* par36 - 9/28/24: Adds black checkmarks to the right of the start of each list. Makes sure it doesn't apply to nav ul with the not selector */
+        content: '✓'; 
+        margin-right: 5px; 
+        color: black; 
+        }
+
+        nav { /* par36 - 9/28/24: Changes the background of nav to green */
+        background-color: green; 
+        }
+
+        body { /* par36 - 9/28/24: Changes the background of the page to light blue (additional styling) */
+        background-color: mediumturquoise;
+        }
+
+        h1::first-letter { /* par36 - 9/28/24: Changes the first letter in the h1 tag to uppercase */
+        text-transform: uppercase;
+        }
+
+        a::first-letter { /* par36 - 9/28/24: Changes the first letter in the a tag to uppercase*/
+        text-transform: uppercase;
+        }
+    </style>
+    <!-- make the necessary edits above this line -->
+
+
+    <!-- Do not edit anything below this line, doing so will lose points-->
+    <script src="https://it202-spring-22.herokuapp.com/M3/problem1.js">
+            //Don't edit anything in this tag and do not delete it
+    </script>
+</head>
+<!-- Do not edit anything below this line, doing so will lose points-->
+
+<body onload="check();updateCurrentPage('start');">
+    <header>
+        <h2>Problem 1</h2>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="#login">login</a></li>
+            <li><a href="#register">register</a></li>
+            <li><a href="#profile">profile</a></li>
+            <li><a href="#logout">logout</a></li>
+        </ul>
+    </nav>
+    <h1></h1>
+    <h3>Challenges</h3>
+    <ul>
+        <li>Edit the given <code>&lt;style&gt;</code> tag to customize the appearance of this page
+            <ul>
+                <li>(1 pt) Make the navigation horizontal</li>
+                <li>(1 pt) Get rid of the navigation list item markers</li>
+                <li>(1 pt) Give the navigation a background</li>
+                <li>(1 pt) Make the links (or their surrounding area) change color on mouseover</li>
+                <li>(1 pt) Change the "bullet points" of this entire list to checkmarks (✓)</li>
+                <li>(1 pt) Use CSS to uppercase the first character of the content in the <code>&lt;h1&gt;</code> tag
+                    and the
+                    <code>&lt;a&gt;</code> tags
+                </li>
+                <li>(1 pt) Add some styling of your choice (that doesn't conflict with any requests in this assignment),
+                    this will be mentioned in the submission</li>
+            </ul>
+        </li>
+        <li>(1 pt) Any style applied to unordered list in the <code>&lt;nav&gt;</code> tag should not apply to this list
+            (i.e., nav
+            and this
+            list should
+            not appear identical)</li>
+        <li>
+            Any time a navigation link is clicked have it do the following:
+            <ul>
+                <li>(1 pt) Update the content of the <code>&lt;h1&gt;</code> tag with the link text</li>
+                <li>(1 pt) Update the content of the <code>&lt;title&gt;</code> tag with the link text</li>
+                <li>Hint: Get the word of the current navigation and pass it to updateCurrentPage()</li>
+            </ul>
+        </li>
+    </ul>
+    <footer></footer>
+</body>
+
+</html>
