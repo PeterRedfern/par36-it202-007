@@ -27,7 +27,11 @@ function processBirds($birds) {
     // TODO add logic here to create a new array with only name, color, and region
     $subset = []; // result array
     // Start edits
-    
+    foreach($birds as $bird) { // par36 - 10/16/24: Goes through each bird variable in the arrays.  
+        if(isset ($bird['name'], $bird['color'], $bird['region'])) { // checks if the variable within each array for name. color and region are set
+            $subset[] = ['name' => $bird['name'], 'color' => $bird['color'], 'region' => $bird['region']]; // makes a new array with the selected properties only
+        }
+    }
     // End edits
     echo "<pre>" . var_export($subset, true) . "</pre>";
     

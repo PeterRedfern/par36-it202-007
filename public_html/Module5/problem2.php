@@ -29,12 +29,19 @@ function processCars($cars) {
     $processedCars = []; // result array
     $classic_age = 25; // don't change this value
     // Start edits
-   
+    $currentYear = 2024; // par36 - 10/16/24: Sets the current year to 2024 (since it is originally undefined)
+    foreach($cars as $car) { // looks through each car variable in the arrays
+        if(isset($car['make'], $car['model'], $car['year'])) { // checks the the already exsiting properties in the arrays
+        $carAge = $currentYear - $car['year']; // does the math for the carAge and assigns the answer it a variable
+        $isClassic = $carAge >= $classic_age; // does the math for determining if the car isClassic if it is >= 25
+
+        $processedCars = [$car['make'], $car['model'], $car['year'], 'carAge' => $carAge, 'isClassic' => $isClassic]; // adds the old and new properties to a new array
+    }
     // End edits
     echo "<pre>" . var_export($processedCars, true) . "</pre>";
     
 }
-
+}
 echo "Problem 2: Getting Classy<br>";
 ?>
 <table>
