@@ -35,8 +35,8 @@ function processCars($cars) {
         $carAge = $currentYear - $car['year']; // does the math for the carAge and assigns the answer it a variable
         $isClassic = $carAge >= $classic_age; // does the math for determining if the car isClassic if it is >= 25
 
-        $processedCars = [$car['make'], $car['model'], $car['year'], 'carAge' => $carAge, 'isClassic' => $isClassic]; // adds the old and new properties to a new array
-    }
+        $processedCars = [$car['make'], $car['model'], $car['year'], 'carAge' => $carAge, 'isClassic' => $isClassic]; 
+    }   // ^ adds the old and new properties to a new array
     // End edits
     echo "<pre>" . var_export($processedCars, true) . "</pre>";
     

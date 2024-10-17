@@ -49,8 +49,18 @@ function joinArrays($users, $activities) {
     // TODO add logic here to join the arrays on userId
     $joined = []; // result array
     // Start edits
-    
+    $activityCheck = []; // par36 - 10/16/24: creates an array to hold the data accessed in the foreach loop
+    foreach($activities as $activity) { // iterates through the entire activities array
+        $activityCheck[$activity['userId']] = $activity['activity']; 
+        // ^ creates an associative array, mapping the userId to an activity so it can be matched with the user later
+    }
 
+    foreach($users as $user) { // par36 - 10/16/24: iterates through the entire users array
+        if(isset($activityCheck[$user['userId']])) { // checks for the userId variable in the array
+            $joined[] = ['userId' => $user['userId'], 'name' => $user['name'], 'age' => $user['age'], 'activity' => $activityCheck[$user['userId']]];
+            // ^ gets all of the relevant fields from the user array and adds the activity check to map the activity to the user via ID match
+        }
+    }
     // End edits
     echo "<pre>" . var_export($joined, true) . "</pre>";
 }
