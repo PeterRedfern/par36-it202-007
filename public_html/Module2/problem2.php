@@ -13,6 +13,7 @@ function getTotal($arr) {
     $number = array_sum($arr); // par36 (9/21/24) - Computes the total of numbers in each array
     $roundedNumber = round($number, 2); // rounds each number to two decimal places
     $total = $roundedNumber; // gives the total variable the attribute of the rounded sum of the floats
+    $total = sprintf("%0.2f", $total); // par36 (10/22/24) -  adding fix for proper rounding with array 3
     
     //end edits
     echo "The total is $total";
