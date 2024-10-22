@@ -66,8 +66,8 @@
         background-color: mediumturquoise;
         }
 
-        h1::first-letter { /* par36 - 9/28/24: Changes the first letter in the h1 tag to uppercase */
-        text-transform: uppercase;
+        h1, a { /* par36 - 9/28/24: Changes the first letter in the h1 tag to uppercase */
+        text-transform: capitalize; /* par36 - 10/22/24 - fixed capitalization */
         }
 
         a::first-letter { /* par36 - 9/28/24: Changes the first letter in the a tag to uppercase*/
