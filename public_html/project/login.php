@@ -31,7 +31,7 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
     //TODO 3
     $hasError = false;
     if (empty($email)) {
-        flash("Email must not be empty");
+        flash("Email or username must not be empty");
         $hasError = true;
     }
     if (str_contains($email, "@")) {
@@ -54,7 +54,7 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
         }
     }
     if (empty($password)) {
-        flash("password must not be empty");
+        flash("Password must not be empty");
         $hasError = true;
     }
     if (!is_valid_password($password)) {
