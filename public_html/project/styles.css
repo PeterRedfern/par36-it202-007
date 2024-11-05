@@ -11,13 +11,12 @@
 }
 
 .alert-info {
-    background-color: teal;
+    background-color: rgb(4, 0, 59); /* par36 11/1/24 - changed colors */
 }
-nav li{display: inline; background-color: rebeccapurple;}
-nav li a{color: hotpink}
-input{border-radius: 50%;}
+nav li{display: inline; background-color: rgb(0, 187, 255);} /* new highlight color (for links) */
+nav li a{color: white} /* text on top of the links will be white */
 body{
-    background-color: hotpink;
-    color: rgb(153, 0, 153);
+    background-color: rgb(61, 7, 226); /* background will be blue */
+    color: rgb(0, 187, 255); /* text will be light blue */
 
 }
