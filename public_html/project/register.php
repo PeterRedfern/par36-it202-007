@@ -47,10 +47,6 @@ reset_session();
             flash("[Client] Email is invalid", "warning");
             isValid = false;
         }
-        if(form.value == " ") {
-            flash("[Client] Empty field detected, please fill in all fields", "warning");
-            isvalid = false; 
-        } 
         return isValid; // if there are no errors, returns valid
     }
 </script>
