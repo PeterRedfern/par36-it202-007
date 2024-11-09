@@ -1,5 +1,5 @@
 <?php
-
+// par36 - 11/8/24: PHP validation functions
 function sanitize_email($email = "")
 {
     return filter_var(trim($email), FILTER_SANITIZE_EMAIL);
