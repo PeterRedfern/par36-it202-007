@@ -33,7 +33,7 @@ require(__DIR__ . "/../../partials/nav.php");
         }
         let password = form.password.value; // gets password variable
         if (!isValidPassword(password)) { // checks if password is valid using function
-            flash("[Client] Password is too short, must be 8 characters or longer", "warning");
+            flash("[Client] Password is too short, must be 8 characters or longer/Password invalid", "warning");
             isValid = false;
         }
         return isValid; // if there are no errors, returns valid
