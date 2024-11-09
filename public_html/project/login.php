@@ -23,7 +23,7 @@ require(__DIR__ . "/../../partials/nav.php");
                 isValid = false;
             } else { // if there is no @ (username)
                 if (!isValidUsername(email)) { // checks if username is valid using function
-                    flash("[Client] Username is invalid or taken", "warning");
+                    flash("[Client] Email/Username is invalid or taken", "warning");
                     isValid = false;
 
                     //TODO update clientside validation to check if it should
