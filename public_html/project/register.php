@@ -2,7 +2,7 @@
 require(__DIR__ . "/../../partials/nav.php");
 reset_session();
 ?>
-<form onsubmit="return validate(this)" method="POST">
+<form onsubmit="return validate(this)" method="POST"> <!-- par36 - 11/7/24: HTML form that takes in and defines user inputs -->
     <div>
         <label for="email">Email</label>
         <input type="email" name="email" required />
@@ -58,7 +58,7 @@ if (isset($_POST["email"]) && isset($_POST["password"]) && isset($_POST["confirm
     $confirm = se($_POST, "confirm", "", false);
     $username = se($_POST, "username", "", false);
     //TODO 3
-    $hasError = false;
+    $hasError = false; // par36 - 11/8/24: PHP code for validating and updating variables
     if (empty($email)) {
         flash("Email must not be empty", "danger");
         $hasError = true;

@@ -26,8 +26,8 @@ function isValidUsername(username) {
 }
 
 function isValidEmail(email) {
-    const pattern = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})*$/; // par36 11/4/24 - Used from this example: https://digitalfortress.tech/js/top-15-commonly-used-regex/ 
-    return pattern.test(email); 
+    const pattern = /^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6})*$/; 
+    return pattern.test(email); // ^ par36 11/4/24 - Used from this example: https://digitalfortress.tech/js/top-15-commonly-used-regex/ 
 }
 
 function newEqualsConfirm(pw, con) {

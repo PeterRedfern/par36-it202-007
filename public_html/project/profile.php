@@ -1,6 +1,6 @@
 <?php
 require_once(__DIR__ . "/../../partials/nav.php");
-is_logged_in(true);
+is_logged_in(true); // par36 - 11/9/24: profile.php uses the is_logged_in function
 ?>
 <?php
 if (isset($_POST["save"])) {
