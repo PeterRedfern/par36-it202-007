@@ -2,7 +2,7 @@
 require(__DIR__ . "/../../partials/nav.php");
 ?>
 <form onsubmit="return validate(this)" method="POST">
-    <div>
+    <div> <!-- par36 - 11/8/24: HTML form that takes in and defines user inputs -->
         <label for="email">Email/Username</label>
         <input type="text" name="email" required />
     </div>
@@ -43,7 +43,7 @@ require(__DIR__ . "/../../partials/nav.php");
 //TODO 2: add PHP Code
 if (isset($_POST["email"]) && isset($_POST["password"])) {
     $email = se($_POST, "email", "", false);
-    $password = se($_POST, "password", "", false);
+    $password = se($_POST, "password", "", false); // par36 - 11/8/24: PHP validation code
 
     //TODO 3
     $hasError = false;
@@ -78,7 +78,7 @@ if (isset($_POST["email"]) && isset($_POST["password"])) {
         flash("Password too short");
         $hasError = true;
     }
-    if (!$hasError) {
+    if (!$hasError) { // par36 11/8/24 - PHP validation code part 2
         //flash("Welcome, $email");
         //TODO 4
         $db = getDB();
