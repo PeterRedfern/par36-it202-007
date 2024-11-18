@@ -4,7 +4,7 @@ require(__DIR__ . "/../../partials/nav.php");
 $result = [];
 if (isset($_GET["symbol"])) {
     //function=GLOBAL_QUOTE&symbol=MSFT&datatype=json
-    $data = ["function" => "GLOBAL_QUOTE", "symbol" => $_GET["symbol"], "datatype" => "json"];
+    $data = ["symbol" => $_GET["symbol"], "datatype" => "json"];
     $endpoint = "https://rawg-video-games-database.p.rapidapi.com/games";
     $isRapidAPI = true;
     $rapidAPIHost = "rawg-video-games-database.p.rapidapi.com";
@@ -27,6 +27,7 @@ if (isset($_GET["symbol"])) {
     error_log("Response: " . var_export($result, true));
     if (se($result, "status", 400, false) == 200 && isset($result["response"])) {
         $result = json_decode($result["response"], true);
+        //$result = $result["body"]; Potentially used later - 11/14/24 (par36)
     } else {
         $result = [];
     }
