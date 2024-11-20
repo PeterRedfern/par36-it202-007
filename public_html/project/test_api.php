@@ -40,19 +40,7 @@ if (isset($_GET["symbol"])) {
             }
             return $key;
         }, $quote);
-        $result = [$quote];
-        $db = getDB();
-        $query = "INSERT INTO `IT202-F2024-Games` ";
-        $columns = [];
-        $params = [];
-        //per record
-        foreach ($quote as $k => $v) {
-            array_push($columns, "`$k`");
-            $params[":$k"] = $v;
-        }
-        $query .= "(" . join(",", $columns) . ")";
-        $query .= "VALUES (" . join(",", array_keys($params)) . ")";
-        var_export($query);
+        insert("IT202-F2024-Games", $quote, $opts = ["debug" => false, "update_duplicate" => false, "columns_to_update" => []]);
         try {
             $stmt = $db->prepare($query);
             $stmt->execute($params);
