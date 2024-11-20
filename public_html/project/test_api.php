@@ -40,10 +40,8 @@ if (isset($_GET["symbol"])) {
             }
             return $key;
         }, $quote);
-        insert("IT202-F2024-Games", $quote, $opts = ["debug" => false, "update_duplicate" => false, "columns_to_update" => []]);
         try {
-            $stmt = $db->prepare($query);
-            $stmt->execute($params);
+            insert("IT202-F2024-Games", $quote, $opts = ["debug" => false, "update_duplicate" => false, "columns_to_update" => []]);
             flash("Inserted record", "success");
         } catch (PDOException $e) {
             error_log("Something broke with the query" . var_export($e, true));
