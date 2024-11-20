@@ -55,6 +55,9 @@ session_start();
                             <li><a class="dropdown-item" href="<?php echo get_url('admin/create_role.php'); ?>">Create Role</a></li>
                             <li><a class="dropdown-item" href="<?php echo get_url('admin/list_roles.php'); ?>">List Roles</a></li>
                             <li><a class="dropdown-item" href="<?php echo get_url('admin/assign_roles.php'); ?>">Assign Roles</a></li>
+                            <li><a class="dropdown-item" href="<?php echo get_url('admin/create_game.php'); ?>">Create Game</a></li>
+                            <li><a class="dropdown-item" href="<?php echo get_url('admin/list_games.php'); ?>">List Games</a></li>
+                            <li><a class="dropdown-item" href="<?php echo get_url('admin/edit_game.php'); ?>">Edit Game</a></li>
                         </ul>
                     </li>
                 <?php endif; ?>

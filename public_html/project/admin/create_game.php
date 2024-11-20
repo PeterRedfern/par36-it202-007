@@ -4,7 +4,7 @@ require(__DIR__ . "/../../../partials/nav.php");
 
 if (!has_role("Admin")) {
     flash("You don't have permission to view this page", "warning");
-    die(header("Location: $BASE_PATH" . "/home.php"));
+    die(header("Location: " . get_url("home.php")));
 }
 ?>
 
@@ -17,7 +17,7 @@ if (isset($_POST["action"])) {
     $quote = [];
     if ($game) {
         if ($action === "fetch") {
-            $result = fetch_quote($game);
+            $result = fetch_games($game);
             
             error_log("Data from API" . var_export($result, true));
             if ($result) {

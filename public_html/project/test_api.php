@@ -4,7 +4,7 @@ require(__DIR__ . "/../../partials/nav.php");
 $result = [];
 if (isset($_GET["symbol"])) {
     //function=GLOBAL_QUOTE&symbol=MSFT&datatype=json
-    $data = ["symbol" => $_GET["symbol"], "datatype" => "json"];
+    $data = ["search" => $_GET["symbol"], "datatype" => "json"];
     $endpoint = "https://rawg-video-games-database.p.rapidapi.com/games";
     $isRapidAPI = true;
     $rapidAPIHost = "rawg-video-games-database.p.rapidapi.com";
@@ -30,6 +30,37 @@ if (isset($_GET["symbol"])) {
         //$result = $result["body"]; Potentially used later - 11/14/24 (par36)
     } else {
         $result = [];
+    }
+
+    if (isset($result)) { // par36 - 11/20/24: test data mapping
+        $quote = $result;
+        $quote = array_map(function ($key) {
+            if ($key === 'name') {
+                return 'game_title';
+            }
+            return $key;
+        }, $quote);
+        $result = [$quote];
+        $db = getDB();
+        $query = "INSERT INTO `IT202-F2024-Games` ";
+        $columns = [];
+        $params = [];
+        //per record
+        foreach ($quote as $k => $v) {
+            array_push($columns, "`$k`");
+            $params[":$k"] = $v;
+        }
+        $query .= "(" . join(",", $columns) . ")";
+        $query .= "VALUES (" . join(",", array_keys($params)) . ")";
+        var_export($query);
+        try {
+            $stmt = $db->prepare($query);
+            $stmt->execute($params);
+            flash("Inserted record", "success");
+        } catch (PDOException $e) {
+            error_log("Something broke with the query" . var_export($e, true));
+            flash("An error occurred", "danger");
+        }
     }
 }
 ?>

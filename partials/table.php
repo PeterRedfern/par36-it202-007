@@ -3,6 +3,7 @@
     //setup some variables for readability
     $_extra_classes = se($data, "extra_classes", "", false);
     $_title = se($data, "title", "", false);
+    $title = " ";
     $_data = isset($data["data"]) ? $data["data"] : [];
     if (!$_data) {
         $_data = [];

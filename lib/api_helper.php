@@ -47,6 +47,7 @@ function _sendRequest($url, $key, $data = [], $method = 'GET', $isRapidAPI = tru
     ];
 
     if ($method == 'GET') {
+        $data ["key"] = $API_KEYS["key"]; 
         $options[CURLOPT_URL] = "$url?" . http_build_query($data); //key1=v1&key2=v2
     } else {
         $options[CURLOPT_URL] = $url;

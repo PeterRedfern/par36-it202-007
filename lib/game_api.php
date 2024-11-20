@@ -1,6 +1,6 @@
 <?php
 
-function fetch_quote($symbol)
+function fetch_games($symbol)
 {
     $data = ["symbol" => $_GET["symbol"], "datatype" => "json"];
     $endpoint = "https://rawg-video-games-database.p.rapidapi.com/games";
