@@ -24,7 +24,7 @@ session_start();
 
 
 ?>
-<!-- boostrap inclusion 5.3 -->
+<!-- bootstrap inclusion 5.3 -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <!-- include css and js files -->
@@ -54,10 +54,10 @@ session_start();
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="<?php echo get_url('admin/create_role.php'); ?>">Create Role</a></li>
                             <li><a class="dropdown-item" href="<?php echo get_url('admin/list_roles.php'); ?>">List Roles</a></li>
-                            <li><a class="dropdown-item" href="<?php echo get_url('admin/assign_roles.php'); ?>">Assign Roles</a></li>
-                            <li><a class="dropdown-item" href="<?php echo get_url('admin/create_game.php'); ?>">Create Game</a></li>
-                            <li><a class="dropdown-item" href="<?php echo get_url('admin/list_games.php'); ?>">List Games</a></li>
-                            <li><a class="dropdown-item" href="<?php echo get_url('admin/edit_game.php'); ?>">Edit Game</a></li>
+                            <li><a class="dropdown-item" href="<?php echo get_url('admin/assign_roles.php'); ?>">Assign Roles</a></li> <!-- par36 - 11/20/24: adding 3 more pages (below) to be admin accessable -->
+                            <li><a class="dropdown-item" href="<?php echo get_url('admin/create_game.php'); ?>">Create Game</a></li> <!-- new page -->
+                            <li><a class="dropdown-item" href="<?php echo get_url('admin/list_games.php'); ?>">List Games</a></li> <!-- new page -->
+                            <li><a class="dropdown-item" href="<?php echo get_url('admin/edit_game.php'); ?>">Edit Game</a></li> <!-- new page -->
                         </ul>
                     </li>
                 <?php endif; ?>
