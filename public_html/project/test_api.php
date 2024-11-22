@@ -13,6 +13,9 @@ if (isset($_GET["symbol"])) {
         $result = json_decode($result["response"], true);
         $games = []; // par36 - 11/22/24: Creates games array
         foreach ($result["results"] as $g) { // gets each result
+            if($g["released"] == null) {
+                $g["released"] = ""; 
+            }
             $game = [
                 "game_title" => $g["name"], 
                 "release_date" => $g["released"], 
@@ -25,7 +28,11 @@ if (isset($_GET["symbol"])) {
                 }
             }
             $game["platforms"] = implode(", ", $platforms); // puts all of the platforms together to be inserted
-            
+            foreach($game as $key=>$value){
+                if(is_array($value) || is_object($value)){
+                    throw new Exception("$key has an invalid value $value for " . var_export($game, true));
+                }
+            }
             $games[] = $game; // populates game array with results
         }
         $result = $games; // gives game results to result
@@ -35,7 +42,7 @@ if (isset($_GET["symbol"])) {
 }
 if (isset($result)) {
     try {
-        insert("IT202-F2024-Games", $result, $opts = ["debug" => false, "update_duplicate" => true, "columns_to_update" => ["game_title", "platforms", "genre", "release_date"]]);
+        insert("IT202-F2024-Games", $result = ["debug" => false, "update_duplicate" => true, "columns_to_update" => ["game_title", "platforms", "genre", "release_date"]]);
         flash("Inserted record", "success");
     } catch (PDOException $e) {
         error_log("PDO Error: " . $e->getMessage()); // par36 - 11/22/24: for checking errors
@@ -43,6 +50,11 @@ if (isset($result)) {
         flash("An error occurred", "danger");
     }
 }
+/* See full array properties - DISABLED FOR NOW
+echo "<pre>";
+var_dump($result);
+echo "</pre>";
+*/
 ?>
 <div class="container-fluid">
     <h1>Game Info</h1>
