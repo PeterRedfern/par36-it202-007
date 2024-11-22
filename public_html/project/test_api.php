@@ -21,7 +21,7 @@ if (isset($_GET["symbol"])) {
             $platforms = [];
             if (isset($g["platforms"])) {
                 foreach ($g["platforms"] as $plat) { // goes through all of the platforms in the platforms category
-                    $platforms[] = $plat["platforms"]["name"]; // maps platforms to database
+                    $platforms[] = $plat["platform"]["name"]; // maps platforms to database
                 }
             }
             $game["platforms"] = implode(", ", $platforms); // puts all of the platforms together to be inserted
