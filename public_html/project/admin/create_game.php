@@ -26,7 +26,7 @@ if (isset($_POST["action"])) {
             }
         } else if ($action === "create") {
             foreach ($_POST as $k => $v) {
-                if (!in_array($k, ["game_title", "publisher", "genre","release_year"])) {
+                if (!in_array($k, ["game_title", "platforms", "genre","release_date"])) {
                     unset($_POST[$k]);
                 }
                 $quote = $_POST;
@@ -83,9 +83,9 @@ if (isset($_POST["action"])) {
         <form method="POST">
 
             <?php render_input(["type" => "text", "name" => "title", "placeholder" => "Game Title", "label" => "Game Title", "rules" => ["required" => "required"]]); ?>
-            <?php render_input(["type" => "text", "name" => "publisher", "placeholder" => "Game Publisher", "label" => "Game Publisher", "rules" => ["required" => "required"]]); ?>
+            <?php render_input(["type" => "text", "name" => "platforms", "placeholder" => "Game Platforms", "label" => "Game Platforms", "rules" => ["required" => "required"]]); ?>
             <?php render_input(["type" => "text", "name" => "genre", "placeholder" => "Game Genre", "label" => "Game Genre", "rules" => ["required" => "required"]]); ?>
-            <?php render_input(["type" => "number", "name" => "release", "placeholder" => " Game Release Year", "label" => "Game Release Year", "rules" => ["required" => "required"]]); ?>
+            <?php render_input(["type" => "number", "name" => "release", "placeholder" => " Game Release Date", "label" => "Game Release Date", "rules" => ["required" => "required"]]); ?>
 
             <?php render_input(["type" => "hidden", "name" => "action", "value" => "create"]); ?>
             <?php render_button(["text" => "Search", "type" => "submit", "text" => "Create"]); ?>

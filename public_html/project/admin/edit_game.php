@@ -13,7 +13,7 @@ $id = se($_GET, "id", -1, false);
 //TODO handle game fetch
 if (isset($_POST["symbol"])) {
     foreach ($_POST as $k => $v) {
-        if (!in_array($k, ["game_title", "publisher", "genre","release_year"])) {
+        if (!in_array($k, ["game_title", "platforms", "genre","release_date"])) {
             unset($_POST[$k]);
         }
         $quote = $_POST;
@@ -53,7 +53,7 @@ $game = [];
 if ($id > -1) {
     //fetch
     $db = getDB();
-    $query = "SELECT game_title, open, publisher, genre, release_year  FROM `IT202-F2024-Games` WHERE id = :id";
+    $query = "SELECT game_title, open, platforms, genre, release_date  FROM `IT202-F2024-Games` WHERE id = :id";
     try {
         $stmt = $db->prepare($query);
         $stmt->execute([":id" => $id]);
@@ -72,9 +72,9 @@ if ($id > -1) {
 if ($game) {
     $form = [
         ["type" => "text", "name" => "title", "placeholder" => "Game Title", "label" => "Game Title", "rules" => ["required" => "required"]],
-        ["type" => "text", "name" => "publisher", "placeholder" => "Game Publisher", "label" => "Game Publisher", "rules" => ["required" => "required"]],
+        ["type" => "text", "name" => "platforms", "placeholder" => "Game Platforms", "label" => "Game Platforms", "rules" => ["required" => "required"]],
         ["type" => "text", "name" => "genre", "placeholder" => "Game Genre", "label" => "Game Genre", "rules" => ["required" => "required"]],
-        ["type" => "number", "name" => "release", "placeholder" => " Game Release Year", "label" => "Game Release Year", "rules" => ["required" => "required"]],
+        ["type" => "number", "name" => "release", "placeholder" => " Game Release Date", "label" => "Game Release Date", "rules" => ["required" => "required"]],
     ];
     $keys = array_keys($game);
 

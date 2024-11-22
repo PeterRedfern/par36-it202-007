@@ -9,7 +9,7 @@ if (!has_role("Admin")) {
 
 
 
-$query = "SELECT id, game_title, open, publisher, genre, release_year, is_api FROM `IT202-F2024-Games` ORDER BY created DESC LIMIT 25";
+$query = "SELECT id, game_title, open, platforms, genre, release_date, is_api FROM `IT202-F2024-Games` ORDER BY created DESC LIMIT 25";
 $db = getDB();
 $stmt = $db->prepare($query);
 $results = [];

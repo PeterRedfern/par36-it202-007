@@ -27,7 +27,31 @@ if (isset($_GET["symbol"])) {
     error_log("Response: " . var_export($result, true));
     if (se($result, "status", 400, false) == 200 && isset($result["response"])) {
         $result = json_decode($result["response"], true);
-        //$result = $result["body"]; Potentially used later - 11/14/24 (par36)
+ 
+        $game_title = [];
+        $genre = [];
+        $release_date = [];
+        $platforms = [];
+        $desired_columns = ["game_title", "platforms", "genre", "release_date"]; //database column names
+        foreach($result as $g) {
+            $name = $g["name"];
+
+            $released = $g["released"];
+
+            $genres = $g["genres"]; 
+
+            foreach($g["platforms"] as $plat){
+            array_push($platforms, $plat["platform"]["name"]);
+            }  
+        }
+    }
+        // inserts
+        
+        //insert("IT202-F2024-Games", $game, ["update dupliacte", false]); 
+        //insert("IT202-F2024-Games", $platforms); 
+        //insert("IT202-F2024-Games", $genre); 
+        //insert("IT202-F2024-Games", $release_date); 
+        // nested insert example: insert("IT202-F2024-Games", $gameArr['data1']['data2'][0]['info']);
     } else {
         $result = [];
     }
@@ -35,20 +59,19 @@ if (isset($_GET["symbol"])) {
     if (isset($result)) { // par36 - 11/20/24: test data mapping
         $quote = $result;
         $quote = array_map(function ($key) {
-            if ($key === 'name') {
-                return 'game_title';
+            if ($key === 'result') {
+                return 'quote';
             }
             return $key;
         }, $quote);
         try {
-            insert("IT202-F2024-Games", $quote, $opts = ["debug" => false, "update_duplicate" => false, "columns_to_update" => []]);
+            insert("IT202-F2024-Games", $quote, $opts = ["debug" => false, "update_duplicate" => false, "columns_to_update" => ["game_title", "platforms", "genre", "release_date"]]);
             flash("Inserted record", "success");
         } catch (PDOException $e) {
             error_log("Something broke with the query" . var_export($e, true));
             flash("An error occurred", "danger");
         }
     }
-}
 ?>
 <div class="container-fluid">
     <h1>Game Info</h1>
