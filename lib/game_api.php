@@ -1,8 +1,8 @@
 <?php
 
-function fetch_games($game)
+function fetch_games($search)
 {
-    $data = ["search" => $_GET["symbol"], "datatype" => "json"];
+    $data = ["search" => $search, "datatype" => "json"];
     $endpoint = "https://rawg-video-games-database.p.rapidapi.com/games";
     $isRapidAPI = true;
     $rapidAPIHost = "rawg-video-games-database.p.rapidapi.com";
