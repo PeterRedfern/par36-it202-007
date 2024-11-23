@@ -9,7 +9,7 @@ if (!has_role("Admin")) {
 
 
 
-$query = "SELECT id, game_title, open, platforms, genre, release_date, is_api FROM `IT202-F2024-Games` ORDER BY created DESC LIMIT 25";
+$query = "SELECT id, game_title, platforms, genre, release_date, is_api FROM `IT202-F2024-Games` ORDER BY created DESC LIMIT 25";
 $db = getDB();
 $stmt = $db->prepare($query);
 $results = [];
@@ -24,7 +24,7 @@ try {
     flash("Unhandled error occurred", "danger");
 }
 
-$table = ["data" => $results, "title" => "Latest Games", "ignored_columns" => ["id"], "edit_url" => get_url("admin/edit_game.php")];
+$table = ["data" => $results, "title" => "Latest Games", "edit_url" => get_url("admin/edit_game.php"), "delete" => get_url("Delete")];
 ?>
 <div class="container-fluid">
     <h3>List Games</h3>

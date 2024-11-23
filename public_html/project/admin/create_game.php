@@ -22,7 +22,7 @@ if (isset($_POST["action"])) {
             error_log("Data from API" . var_export($result, true));
             if ($result) {
                 $quote = $result;
-                $quote["is_api"] = 1;
+                $quote["is_api"] = 0;
             }
         } else if ($action === "create") {
             foreach ($_POST as $k => $v) {
@@ -82,10 +82,10 @@ if (isset($_POST["action"])) {
     <div id="create" style="display: none;" class="tab-target">
         <form method="POST">
 
-            <?php render_input(["type" => "text", "name" => "title", "placeholder" => "Game Title", "label" => "Game Title", "rules" => ["required" => "required"]]); ?>
+            <?php render_input(["type" => "text", "name" => "game_title", "placeholder" => "Game Title", "label" => "Game Title", "rules" => ["required" => "required"]]); ?>
             <?php render_input(["type" => "text", "name" => "platforms", "placeholder" => "Game Platforms", "label" => "Game Platforms", "rules" => ["required" => "required"]]); ?>
             <?php render_input(["type" => "text", "name" => "genre", "placeholder" => "Game Genre", "label" => "Game Genre", "rules" => ["required" => "required"]]); ?>
-            <?php render_input(["type" => "number", "name" => "release", "placeholder" => " Game Release Date", "label" => "Game Release Date", "rules" => ["required" => "required"]]); ?>
+            <?php render_input(["type" => "text", "name" => "release_date", "placeholder" => " Game Release Date", "label" => "Game Release Date", "rules" => ["required" => "required"]]); ?>
 
             <?php render_input(["type" => "hidden", "name" => "action", "value" => "create"]); ?>
             <?php render_button(["text" => "Search", "type" => "submit", "text" => "Create"]); ?>
