@@ -6,5 +6,5 @@ CREATE TABLE IF NOT EXISTS `IT202-F2024-Games` (
     `release_date` VARCHAR(255),
     `created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `modified` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    UNIQUE(`game_title`, `genre`, `release_date`)
+    UNIQUE(`game_title`)
 )
