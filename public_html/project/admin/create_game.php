@@ -14,10 +14,10 @@ if (!has_role("Admin")) {
 if (isset($_POST["action"])) {
     $action = $_POST["action"];
     $game =  strtoupper(se($_POST, "game", "", false));
-    $quote = [];
+    $game = [];
     if ($game) {
         if ($action === "fetch") {
-            $result = fetch_games($game);
+            $result = fetch_games($search);
             
             error_log("Data from API" . var_export($result, true));
             if ($result) {
