@@ -21,14 +21,13 @@ require(__DIR__ . "/../../partials/nav.php");
             if (!isValidEmail(email)) { // checks if email is valid using function
                 flash("[Client] Email is invalid or taken", "warning");
                 isValid = false;
-            } else { // if there is no @ (username)
-                if (!isValidUsername(email)) { // checks if username is valid using function
-                    flash("[Client] Email/Username is invalid or taken", "warning");
-                    isValid = false;
-
-                    //TODO update clientside validation to check if it should
-                    //valid email or username
-                }
+            }
+            // if there is no @ (username)
+            if (!isValidUsername(email)) { // checks if username is valid using function
+                flash("[Client] Username is invalid or taken", "warning");
+                isValid = false;
+                //TODO update clientside validation to check if it should
+                //valid email or username
             }
         }
         let password = form.password.value; // gets password variable
@@ -39,6 +38,7 @@ require(__DIR__ . "/../../partials/nav.php");
         return isValid; // if there are no errors, returns valid
     }
 </script>
+
 <?php
 //TODO 2: add PHP Code
 if (isset($_POST["email"]) && isset($_POST["password"])) {
