@@ -27,8 +27,8 @@ function fetch_games($search)
                 }
             }
             $game["platforms"] = implode(", ", $platforms); // puts all of the platforms together to be inserted
-            foreach($game as $key=>$value){
-                if(is_array($value) || is_object($value)){
+            foreach($game as $key=>$value) {
+                if(is_array($value) || is_object($value)) {
                     throw new Exception("$key has an invalid value $value for " . var_export($game, true));
                 }
             }

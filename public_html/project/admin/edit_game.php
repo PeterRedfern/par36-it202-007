@@ -11,24 +11,23 @@ if (!has_role("Admin")) {
 <?php
 $id = se($_GET, "id", -1, false);
 //TODO handle game fetch
-if (isset($_POST["games"])) {
+if (isset($_POST["game_title"])) {
     foreach ($_POST as $k => $v) {
-        if (!in_array($k, ["id", "game_title", "platforms", "genre","release_date"])) {
+        if (!in_array($k, ["game_title", "platforms", "genre", "release_date"])) {
             unset($_POST[$k]);
         }
         $games = $_POST;
-        error_log("Cleaned up POST: " . var_export($game, true));
+        error_log("Cleaned up POST: " . var_export($games, true));
     }
     //insert data
     try {
-        insert("IT202-F2024-Games", $games, ["debug" => false, "update_duplicate" => false, "columns_to_update" => ["id", "game_title", "platforms", "genre", "release_date"]]);
+        insert("IT202-F2024-Games", $games, ["debug" => false, "update_duplicate" => true, "columns_to_update" => ["game_title", "platforms", "genre", "release_date"]]);
         flash("Updated record ", "success");
     } catch (PDOException $e) {
         error_log("Something broke with the query" . var_export($e, true));
         flash("An error occurred", "danger");
     }
 }
-
 $game = [];
 if ($id > -1) {
     //fetch
