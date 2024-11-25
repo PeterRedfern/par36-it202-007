@@ -11,15 +11,13 @@ if (!has_role("Admin")) {
 <?php
 $id = se($_GET, "id", -1, false);
 //TODO handle game fetch
-if (isset($_POST["game"])) {
-    error_log("POST data: " . var_export($_POST, true));
+if (isset($_POST["games"])) {
     foreach ($_POST as $k => $v) {
         if (!in_array($k, ["id", "game_title", "platforms", "genre","release_date"])) {
             unset($_POST[$k]);
         }
         $games = $_POST;
-        error_log("Inserting data: " . var_export($game, true));
-        error_log("Cleaned up POST: " . var_export($games, true));
+        error_log("Cleaned up POST: " . var_export($game, true));
     }
     //insert data
     try {
@@ -91,7 +89,7 @@ if ($game) {
 
             render_input($v);
         } ?>
-        <?php render_button(["text" => "Search", "type" => "submit", "text" => "Update"]); ?>
+        <?php render_button(["type" => "submit", "text" => "Update"]); ?>
     </form>
 
 </div>
@@ -100,7 +98,7 @@ if ($game) {
     <form method="POST"> <!-- creates form to send to db -->
         <input type="hidden" name="id" value="<?php echo htmlspecialchars($game['id']); ?>" /> <!-- takes in id secretly with specialchars for security/anti-tampering -->
         <input type="hidden" name="delete" value="1" /> <!-- sends delete by setting value to 1 -->
-        <?php render_button(["text" => "Search", "type" => "submit", "text" => "Delete"]); ?>
+        <?php render_button(["text" => "Delete", "type" => "submit"]); ?> <!-- renders delete button using render_button -->
     </form>
 </div>
 

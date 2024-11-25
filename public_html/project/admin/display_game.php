@@ -84,19 +84,19 @@ if ($game) {
     </form>
 </div>
 
-<div class="container-fluid"> <!-- par36 - 11/23/24: creates container for delete button -->
-    <form method="POST"> <!-- creates form for request -->
-        <input type="hidden" name="id" value="<?php echo htmlspecialchars($game['id']); ?>" /> <!-- takes in id secretly with specialchars for security/anti-tampering -->
-        <input type="hidden" name="delete"/> <!-- sets delete name -->
-        <?php render_button(["text" => "Search", "type" => "submit", "text" => "Delete (Admin Only)"]); ?>
-    </form>
-</div>
-
 <div class="container-fluid"> <!-- par36 - 11/24/24: creates container for edit button -->
     <form method="POST"> <!-- creates form for request -->
         <input type="hidden" name="id" value="<?php echo htmlspecialchars($game['id']); ?>" /> <!-- takes in id secretly with specialchars for security/anti-tampering -->
         <input type="hidden" name="edit"/> <!-- sets edit name -->
         <?php render_button(["text" => "Search", "type" => "submit", "text" => "Edit (Admin Only)"]); ?>
+    </form>
+</div>
+
+<div class="container-fluid"> <!-- par36 - 11/23/24: creates container for delete button -->
+    <form method="POST"> <!-- creates form for request -->
+        <input type="hidden" name="id" value="<?php echo htmlspecialchars($game['id']); ?>" /> <!-- takes in id secretly with specialchars for security/anti-tampering -->
+        <input type="hidden" name="delete"/> <!-- sets delete name -->
+        <?php render_button(["text" => "Search", "type" => "submit", "text" => "Delete (Admin Only)"]); ?>
     </form>
 </div>
 
