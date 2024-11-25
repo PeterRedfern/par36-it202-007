@@ -26,10 +26,9 @@ require(__DIR__ . "/../../partials/nav.php");
             if (!isValidUsername(email)) { // checks if username is valid using function
                 flash("[Client] Username is invalid or taken", "warning");
                 isValid = false;
-
                 //TODO update clientside validation to check if it should
                 //valid email or username
-            }   
+            }
         }
         let password = form.password.value; // gets password variable
         if (!isValidPassword(password)) { // checks if password is valid using function
@@ -37,6 +36,7 @@ require(__DIR__ . "/../../partials/nav.php");
             isValid = false;
         }
         return isValid; // if there are no errors, returns valid
+    }
 </script>
 
 <?php
