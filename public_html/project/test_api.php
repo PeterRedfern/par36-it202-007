@@ -3,66 +3,58 @@ require(__DIR__ . "/../../partials/nav.php");
 
 $result = [];
 if (isset($_GET["symbol"])) {
-    //function=GLOBAL_QUOTE&symbol=MSFT&datatype=json
     $data = ["search" => $_GET["symbol"], "datatype" => "json"];
     $endpoint = "https://rawg-video-games-database.p.rapidapi.com/games";
     $isRapidAPI = true;
     $rapidAPIHost = "rawg-video-games-database.p.rapidapi.com";
     $result = get($endpoint, "API_KEY", $data, $isRapidAPI, $rapidAPIHost);
-    //example of cached data to save the quotas, don't forget to comment out the get() if using the cached data for testing
-    /* $result = ["status" => 200, "response" => '{
-    "Global Quote": {
-        "01. symbol": "MSFT",
-        "02. open": "420.1100",
-        "03. high": "422.3800",
-        "04. low": "417.8400",
-        "05. price": "421.4400",
-        "06. volume": "17861855",
-        "07. latest trading day": "2024-04-02",
-        "08. previous close": "424.5700",
-        "09. change": "-3.1300",
-        "10. change percent": "-0.7372%"
-    }
-}'];*/
     error_log("Response: " . var_export($result, true));
     if (se($result, "status", 400, false) == 200 && isset($result["response"])) {
         $result = json_decode($result["response"], true);
-        //$result = $result["body"]; Potentially used later - 11/14/24 (par36)
+        $games = []; // par36 - 11/22/24: Creates games array
+        foreach ($result["results"] as $g) { // gets each result
+            if($g["released"] == null) {
+                $g["released"] = ""; 
+            }
+            $game = [
+                "game_title" => $g["name"], 
+                "release_date" => $g["released"], 
+                "genre" => isset($g["genres"]) ? implode(", ", array_map(fn($genre) => $genre["name"], $g["genres"])) : "", 
+            ];  // ^ puts all of the genres together to be inserted
+            $platforms = [];
+            if (isset($g["platforms"])) {
+                foreach ($g["platforms"] as $plat) { // goes through all of the platforms in the platforms category
+                    $platforms[] = $plat["platform"]["name"]; // maps platforms to database
+                }
+            }
+            $game["platforms"] = implode(", ", $platforms); // puts all of the platforms together to be inserted
+            foreach($game as $key=>$value){
+                if(is_array($value) || is_object($value)){
+                    throw new Exception("$key has an invalid value $value for " . var_export($game, true));
+                }
+            }
+            $games[] = $game; // populates game array with results
+        }
+        $result = $games; // gives game results to result
     } else {
         $result = [];
     }
-
-    if (isset($result)) { // par36 - 11/20/24: test data mapping
-        $quote = $result;
-        $quote = array_map(function ($key) {
-            if ($key === 'name') {
-                return 'game_title';
-            }
-            return $key;
-        }, $quote);
-        $result = [$quote];
-        $db = getDB();
-        $query = "INSERT INTO `IT202-F2024-Games` ";
-        $columns = [];
-        $params = [];
-        //per record
-        foreach ($quote as $k => $v) {
-            array_push($columns, "`$k`");
-            $params[":$k"] = $v;
-        }
-        $query .= "(" . join(",", $columns) . ")";
-        $query .= "VALUES (" . join(",", array_keys($params)) . ")";
-        var_export($query);
-        try {
-            $stmt = $db->prepare($query);
-            $stmt->execute($params);
-            flash("Inserted record", "success");
-        } catch (PDOException $e) {
-            error_log("Something broke with the query" . var_export($e, true));
-            flash("An error occurred", "danger");
-        }
+    if (isset($result)) {
+    try {
+        insert("IT202-F2024-Games", $result, ["debug" => false, "update_duplicate" => true, "columns_to_update" => ["game_title", "platforms", "genre", "release_date"]]);
+        flash("Inserted record", "success");
+    } catch (PDOException $e) {
+        error_log("PDO Error: " . $e->getMessage()); // par36 - 11/22/24: for checking errors
+        error_log("Something broke with the query: " . var_export($e, true));
+        flash("An error occurred", "danger");
     }
 }
+}
+/* See full array properties - DISABLED FOR NOW
+echo "<pre>";
+var_dump($result);
+echo "</pre>";
+*/
 ?>
 <div class="container-fluid">
     <h1>Game Info</h1>
@@ -74,15 +66,14 @@ if (isset($_GET["symbol"])) {
             <input type="submit" value="Fetch Game" />
         </div>
     </form>
-    <div class="row ">
+    <div class="row">
         <?php if (isset($result)) : ?>
             <?php foreach ($result as $game) : ?>
                 <pre>
-                    <?php var_export($game);?>
+                    <?php var_export($game); ?>
                 </pre>
             <?php endforeach; ?>
         <?php endif; ?>
     </div>
 </div>
-<?php
-require(__DIR__ . "/../../partials/flash.php");
+<?php require(__DIR__ . "/../../partials/flash.php");

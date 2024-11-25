@@ -11,49 +11,28 @@ if (!has_role("Admin")) {
 <?php
 $id = se($_GET, "id", -1, false);
 //TODO handle game fetch
-if (isset($_POST["symbol"])) {
+if (isset($_POST["game_title"])) {
     foreach ($_POST as $k => $v) {
-        if (!in_array($k, ["game_title", "publisher", "genre","release_year"])) {
+        if (!in_array($k, ["game_title", "platforms", "genre", "release_date"])) {
             unset($_POST[$k]);
         }
-        $quote = $_POST;
-        error_log("Cleaned up POST: " . var_export($quote, true));
+        $games = $_POST;
+        error_log("Cleaned up POST: " . var_export($games, true));
     }
     //insert data
-    $db = getDB();
-    $query = "UPDATE `IT202-F2024-Games` SET ";
-
-    $params = [];
-    //per record
-    foreach ($quote as $k => $v) {
-
-        if ($params) {
-            $query .= ",";
-        }
-        //be sure $k is trusted as this is a source of sql injection
-        $query .= "$k=:$k";
-        $params[":$k"] = $v;
-    }
-
-    $query .= " WHERE id = :id";
-    $params[":id"] = $id;
-    error_log("Query: " . $query);
-    error_log("Params: " . var_export($params, true));
     try {
-        $stmt = $db->prepare($query);
-        $stmt->execute($params);
+        insert("IT202-F2024-Games", $games, ["debug" => false, "update_duplicate" => true, "columns_to_update" => ["game_title", "platforms", "genre", "release_date"]]);
         flash("Updated record ", "success");
     } catch (PDOException $e) {
         error_log("Something broke with the query" . var_export($e, true));
         flash("An error occurred", "danger");
     }
 }
-
 $game = [];
 if ($id > -1) {
     //fetch
     $db = getDB();
-    $query = "SELECT game_title, open, publisher, genre, release_year  FROM `IT202-F2024-Games` WHERE id = :id";
+    $query = "SELECT id, game_title, platforms, genre, release_date  FROM `IT202-F2024-Games` WHERE id = :id";
     try {
         $stmt = $db->prepare($query);
         $stmt->execute([":id" => $id]);
@@ -69,12 +48,28 @@ if ($id > -1) {
     flash("Invalid id passed", "danger");
     die(header("Location:" . get_url("admin/list_games.php")));
 }
+
+if (isset($_POST["delete"])) { // par36 - 11/23/24: makes delete query for database
+    if ($id > -1) { // checks for all ids that are 1 or greater
+        $db = getDB(); // gets db
+        $query = "DELETE FROM `IT202-F2024-Games` WHERE id = :id"; // checks db for id to delete
+        try {
+            $deletereq = $db->prepare($query); // prepares delete query
+            $deletereq->execute([":id" => $id]); // executes query
+            flash("Delete Successful", "success"); // sends user friendly confirmation message
+            die(header("Location: " . get_url("admin/list_games.php"))); // redirects to list_games after delete
+        } catch (PDOException $e) {
+            error_log("Error deleting game: " . var_export($e, true)); // logs error message
+            flash("Delete Unsuccessful", "danger"); // sends error message to user
+        }
+    }
+}
 if ($game) {
     $form = [
-        ["type" => "text", "name" => "title", "placeholder" => "Game Title", "label" => "Game Title", "rules" => ["required" => "required"]],
-        ["type" => "text", "name" => "publisher", "placeholder" => "Game Publisher", "label" => "Game Publisher", "rules" => ["required" => "required"]],
+        ["type" => "text", "name" => "game_title", "placeholder" => "Game Title", "label" => "Game Title", "rules" => ["required" => "required"]],
+        ["type" => "text", "name" => "platforms", "placeholder" => "Game Platforms", "label" => "Game Platforms", "rules" => ["required" => "required"]],
         ["type" => "text", "name" => "genre", "placeholder" => "Game Genre", "label" => "Game Genre", "rules" => ["required" => "required"]],
-        ["type" => "number", "name" => "release", "placeholder" => " Game Release Year", "label" => "Game Release Year", "rules" => ["required" => "required"]],
+        ["type" => "text", "name" => "release_date", "placeholder" => " Game Release Date", "label" => "Game Release Date", "rules" => ["required" => "required"]],
     ];
     $keys = array_keys($game);
 
@@ -93,11 +88,18 @@ if ($game) {
 
             render_input($v);
         } ?>
-        <?php render_button(["text" => "Search", "type" => "submit", "text" => "Update"]); ?>
+        <?php render_button(["type" => "submit", "text" => "Update"]); ?>
     </form>
 
 </div>
 
+<div class="container-fluid"> <!-- par36 - 11/23/24: creates container for delete button -->
+    <form method="POST"> <!-- creates form to send to db -->
+        <input type="hidden" name="id" value="<?php echo htmlspecialchars($game['id']); ?>" /> <!-- takes in id secretly with specialchars for security/anti-tampering -->
+        <input type="hidden" name="delete" value="1" /> <!-- sends delete by setting value to 1 -->
+        <?php render_button(["text" => "Delete", "type" => "submit"]); ?> <!-- renders delete button using render_button -->
+    </form>
+</div>
 
 <?php
 //note we need to go up 1 more directory

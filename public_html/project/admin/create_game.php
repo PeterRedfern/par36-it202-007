@@ -9,72 +9,55 @@ if (!has_role("Admin")) {
 ?>
 
 <?php
-
 //TODO handle game fetch
-if (isset($_POST["action"])) {
+if (isset($_POST["game_title"])) { 
     $action = $_POST["action"];
-    $game =  strtoupper(se($_POST, "game", "", false));
-    $quote = [];
-    if ($game) {
-        if ($action === "fetch") {
-            $result = fetch_games($game);
-            
-            error_log("Data from API" . var_export($result, true));
-            if ($result) {
-                $quote = $result;
-                $quote["is_api"] = 1;
+    $game = [];
+    $search = $_POST["game_title"]; 
+    if ($action === "fetch") {
+        $result = fetch_games($search); 
+
+        error_log("Data from API" . var_export($result, true));
+        if ($result) {
+            $game = $result;
+            foreach ($game as &$g) {
+                $g['is_api'] = 1;
             }
-        } else if ($action === "create") {
-            foreach ($_POST as $k => $v) {
-                if (!in_array($k, ["game_title", "publisher", "genre","release_year"])) {
-                    unset($_POST[$k]);
-                }
-                $quote = $_POST;
-                error_log("Cleaned up POST: " . var_export($quote, true));
-            }
+            unset($g);
         }
-    } else {
-        flash("You must provide a game title", "warning");
+    } else if ($action === "create") {
+        foreach ($_POST as $k => $v) {
+            if (!in_array($k, ["game_title", "platforms", "genre", "release_date"])) {
+                unset($_POST[$k]);
+            }
+            $game = [$_POST];
+            error_log("Cleaned up POST: " . var_export($game, true));
+        }
     }
     //insert data
-    $db = getDB();
-    $query = "INSERT INTO `IT202-F2024-Games` ";
-    $columns = [];
-    $params = [];
-    //per record
-    foreach ($quote as $k => $v) {
-        array_push($columns, "`$k`");
-        $params[":$k"] = $v;
-    }
-    $query .= "(" . join(",", $columns) . ")";
-    $query .= "VALUES (" . join(",", array_keys($params)) . ")";
-    error_log("Query: " . $query);
-    error_log("Params: " . var_export($params, true));
     try {
-        $stmt = $db->prepare($query);
-        $stmt->execute($params);
-        flash("Inserted record " . $db->lastInsertId(), "success");
+        insert("IT202-F2024-Games", $game, ["debug" => false, "update_duplicate" => true, "columns_to_update" => ["game_title", "platforms", "genre", "release_date", "is_api"]]);
+        flash("Inserted record ", "success");
     } catch (PDOException $e) {
         error_log("Something broke with the query" . var_export($e, true));
         flash("An error occurred", "danger");
     }
 }
-
 //TODO handle manual create game
 ?>
 <div class="container-fluid">
     <h3>Create or Fetch </h3>
     <ul class="nav nav-tabs">
         <li class="nav-item">
-            <a class="nav-link bg-success" href="#" onclick="switchTab('create')">Fetch</a>
+            <a class="nav-link bg-info" href="#" onclick="switchTab('create')">Fetch</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link bg-success" href="#" onclick="switchTab('fetch')">Create</a>
+            <a class="nav-link bg-info" href="#" onclick="switchTab('fetch')">Create</a>
         </li>
     </ul>
     <div id="fetch" class="tab-target">
         <form method="POST">
-            <?php render_input(["type" => "text", "name" => "title", "placeholder" => "Game Title", "label" => "Game Title", "rules" => ["required" => "required"]]); ?>
+            <?php render_input(["type" => "text", "name" => "game_title", "placeholder" => "Game Title", "label" => "Game Title", "rules" => ["required" => "required"]]); ?>
             <?php render_input(["type" => "hidden", "name" => "action", "value" => "fetch"]); ?>
             <?php render_button(["text" => "Search", "type" => "submit",]); ?>
         </form>
@@ -82,10 +65,10 @@ if (isset($_POST["action"])) {
     <div id="create" style="display: none;" class="tab-target">
         <form method="POST">
 
-            <?php render_input(["type" => "text", "name" => "title", "placeholder" => "Game Title", "label" => "Game Title", "rules" => ["required" => "required"]]); ?>
-            <?php render_input(["type" => "text", "name" => "publisher", "placeholder" => "Game Publisher", "label" => "Game Publisher", "rules" => ["required" => "required"]]); ?>
+            <?php render_input(["type" => "text", "name" => "game_title", "placeholder" => "Game Title", "label" => "Game Title", "rules" => ["required" => "required"]]); ?>
+            <?php render_input(["type" => "text", "name" => "platforms", "placeholder" => "Game Platforms", "label" => "Game Platforms", "rules" => ["required" => "required"]]); ?>
             <?php render_input(["type" => "text", "name" => "genre", "placeholder" => "Game Genre", "label" => "Game Genre", "rules" => ["required" => "required"]]); ?>
-            <?php render_input(["type" => "number", "name" => "release", "placeholder" => " Game Release Year", "label" => "Game Release Year", "rules" => ["required" => "required"]]); ?>
+            <?php render_input(["type" => "text", "name" => "release_date", "placeholder" => " Game Release Date", "label" => "Game Release Date", "rules" => ["required" => "required"]]); ?>
 
             <?php render_input(["type" => "hidden", "name" => "action", "value" => "create"]); ?>
             <?php render_button(["text" => "Search", "type" => "submit", "text" => "Create"]); ?>

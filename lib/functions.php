@@ -28,4 +28,6 @@ require(__DIR__ . "/render_functions.php");
 require(__DIR__ . "/api_helper.php");
 
 require(__DIR__ . "/db_helpers.php");
+
+require(__DIR__ . "/game_api.php");
 ?>
