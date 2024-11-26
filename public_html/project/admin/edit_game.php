@@ -21,7 +21,7 @@ if (isset($_POST["game_title"])) {
     }
     //insert data
     try {
-        insert("IT202-F2024-Games", $games, ["debug" => false, "update_duplicate" => false, "columns_to_update" => ["game_title", "platforms", "genre", "release_date"]]);
+        insert("IT202-F2024-Games", $games, ["debug" => false, "update_duplicate" => true, "columns_to_update" => ["game_title", "platforms", "genre", "release_date"]]);
         flash("Updated record ", "success");
     } catch (PDOException $e) {
         error_log("Something broke with the query" . var_export($e, true));
