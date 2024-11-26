@@ -41,7 +41,7 @@ if (isset($_GET["symbol"])) {
     }
     if (isset($result)) {
     try {
-        insert("IT202-F2024-Games", $result, ["debug" => false, "update_duplicate" => true, "columns_to_update" => ["game_title", "platforms", "genre", "release_date"]]);
+        insert("IT202-F2024-Games", $result, ["debug" => false, "update_duplicate" => false, "columns_to_update" => ["game_title", "platforms", "genre", "release_date"]]);
         flash("Inserted record", "success");
     } catch (PDOException $e) {
         error_log("PDO Error: " . $e->getMessage()); // par36 - 11/22/24: for checking errors
