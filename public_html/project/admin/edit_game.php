@@ -2,7 +2,7 @@
 //note we need to go up 1 more directory
 require(__DIR__ . "/../../../partials/nav.php");
 
-if (!has_role("Admin")) {
+if (!has_role("Admin")) { // par36 - 11/25/24: only admins can made edits
     flash("You don't have permission to view this page", "warning");
     die(header("Location: $BASE_PATH" . "/home.php"));
 }
@@ -22,14 +22,14 @@ if (isset($_POST["game_title"])) {
     //insert data
     try {
         insert("IT202-F2024-Games", $games, ["debug" => false, "update_duplicate" => true, "columns_to_update" => ["game_title", "platforms", "genre", "release_date"]]);
-        flash("Updated record ", "success");
+        flash("Updated record ", "success"); // par36 - 11/25/24: User friendly success message
     } catch (PDOException $e) {
         error_log("Something broke with the query" . var_export($e, true));
-        flash("An error occurred", "danger");
+        flash("An error occurred", "danger"); // par36 - 11/25/24: user friendly error message for update
     }
 }
-$game = [];
-if ($id > -1) {
+$game = []; 
+if ($id > -1) { // par36 - 11/25/24: checks for id from database
     //fetch
     $db = getDB();
     $query = "SELECT id, game_title, platforms, genre, release_date  FROM `IT202-F2024-Games` WHERE id = :id";
@@ -42,7 +42,7 @@ if ($id > -1) {
         }
     } catch (PDOException $e) {
         error_log("Error fetching record: " . var_export($e, true));
-        flash("Error fetching record", "danger");
+        flash("Error fetching record", "danger"); // par36 - 11/25/24: user friendly error message for fetch
     }
 } else {
     flash("Invalid id passed", "danger");
@@ -65,7 +65,7 @@ if (isset($_POST["delete"])) { // par36 - 11/23/24: makes delete query for datab
     }
 }
 if ($game) {
-    $form = [
+    $form = [ // par36 - 11/25/24: shows form attributes in php
         ["type" => "text", "name" => "game_title", "placeholder" => "Game Title", "label" => "Game Title", "rules" => ["required" => "required"]],
         ["type" => "text", "name" => "platforms", "placeholder" => "Game Platforms", "label" => "Game Platforms", "rules" => ["required" => "required"]],
         ["type" => "text", "name" => "genre", "placeholder" => "Game Genre", "label" => "Game Genre", "rules" => ["required" => "required"]],
