@@ -36,7 +36,7 @@ if (isset($_POST["game_title"])) { // par36 - 11/25/24: checks if game_title is 
     }
     //insert data
     try {
-        insert("IT202-F2024-Games", $game, ["debug" => false, "update_duplicate" => true, "columns_to_update" => ["game_title", "platforms", "genre", "release_date", "is_api"]]);
+        insert("IT202-F2024-Games", $game, ["debug" => false, "update_duplicate" => false, "columns_to_update" => ["game_title", "platforms", "genre", "release_date", "is_api"]]);
         flash("Inserted record ", "success"); // par36 - 11/25/24: user-friendly confirmation message
     } catch (PDOException $e) {
         error_log("Something broke with the query" . var_export($e, true));
