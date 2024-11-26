@@ -36,3 +36,6 @@ $table = ["data" => $results, "title" => "Latest Games", "edit_url" => get_url("
     <h3>List Games</h3>
     <?php render_table($table); ?>
 </div>
+<?php
+require_once(__DIR__ . "/../../../partials/flash.php"); // par36 - 11/26/24: to show flash messages properly
+?>
