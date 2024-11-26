@@ -1,6 +1,7 @@
 <?php
 //note we need to go up 1 more directory
 require(__DIR__ . "/../../../partials/nav.php");
+is_logged_in(true); // par36 - 11/25/24: makes sure user is logged in
 ?>
 <form method="POST" action="<?php echo $_SERVER['PHP_SELF'];?>">
     <div> <!-- par36 - 11/23/24: HTML form that takes in how big the user wants the list to be -->

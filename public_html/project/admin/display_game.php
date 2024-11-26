@@ -39,7 +39,7 @@ if (isset($_POST["game"])) {
     }
 }
 $game = [];
-if ($id > -1) {
+if ($id > -1) { // par36 - 11/25/24: gets id for many page purposes
     //fetch
     $db = getDB();
     $query = "SELECT id, game_title, platforms, genre, release_date  FROM `IT202-F2024-Games` WHERE id = :id";
@@ -56,10 +56,11 @@ if ($id > -1) {
     }
 } else {
     flash("Invalid id passed", "danger");
+    die(header("Location: $BASE_PATH" . "/admin/list_games.php")); // redirects to list_games when failed
 }
 
 if ($game) {
-    $form = [
+    $form = [ // par36 - 11/25/24: makes the forms (readonly) that holds the game information
         ["type" => "text", "name" => "game_title", "placeholder" => "Game Title", "label" => "Game Title", "rules" => ["readonly" => "readonly"]],
         ["type" => "text", "name" => "platforms", "placeholder" => "Game Platforms", "label" => "Game Platforms", "rules" => ["readonly" => "readonly"]],
         ["type" => "text", "name" => "genre", "placeholder" => "Game Genre", "label" => "Game Genre", "rules" => ["readonly" => "readonly"]],
