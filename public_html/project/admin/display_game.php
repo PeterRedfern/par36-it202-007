@@ -56,6 +56,7 @@ if ($id > -1) {
     }
 } else {
     flash("Invalid id passed", "danger");
+    die(header("Location: $BASE_PATH" . "/admin/list_games.php")); // redirects to list_games when failed
 }
 
 if ($game) {
