@@ -30,7 +30,7 @@ try {
     flash("Unhandled error occurred", "danger");
 }
 
-$table = ["data" => $results, "title" => "Latest Games", "edit_url" => get_url("admin/edit_game.php"), "delete_url" => get_url("admin/delete_game.php"), "view_url" => get_url("admin/display_game.php")];
+$table = ["data" => $results, "edit_url" => get_url("admin/edit_game.php"), "delete_url" => get_url("admin/delete_game.php"), "view_url" => get_url("admin/display_game.php")];
 ?>
 <div class="container-fluid">
     <h3>List Games</h3>
