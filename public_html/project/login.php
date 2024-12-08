@@ -22,7 +22,7 @@ require(__DIR__ . "/../../partials/nav.php");
                 flash("[Client] Email is invalid or taken", "warning");
                 isValid = false;
             }
-            // if there is no @ (username)
+        } else { // par36 - 12/7/24: updated to fix errors
             if (!isValidUsername(email)) { // checks if username is valid using function
                 flash("[Client] Username is invalid or taken", "warning");
                 isValid = false;

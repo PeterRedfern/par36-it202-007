@@ -25,17 +25,10 @@ $params = [];
 $params[":user_id"] = get_user_id();
 
 
-$sql = "SELECT IT202-F2024-Games.id,game_title,platforms,genre,release_date,
-1 as is_watched,
-type 
-FROM SC_Guides as SCG
-JOIN SC_GuideImages as SCGI on SCGI.guide_id = SCG.id
-JOIN SC_Images SCI on SCGI.image_id = SCI.id
-JOIN SC_GuideProviders as SCGP on SCGP.guide_id = SCG.id
-JOIN SC_Providers as SCP on SCGP.provider_id = SCP.id
-JOIN SC_GuideTopics as SCGT on SCGT.guide_id = SCG.id
-JOIN SC_Topics as SCT on SCGT.topic_id = SCT.id
-JOIN SC_UserGuides SCUG on SCUG.guide_id = SCG.id";
+$sql = "SELECT g.id, game_title, platforms, genre, release_date, 1 as is_watched, type
+FROM IT202_F2024_Games as g
+JOIN IT202_F2024_Usergames as ug on g.id = ug.game_id
+JOIN Users as u on u.id = ug.user_id";
 // the first space is important
 $where = " WHERE Users.id = :user_id"; //filter by user
 
@@ -45,7 +38,7 @@ if (!empty($game_title)) {
     $params[":game_title"] = "%$game_title%";
 }
 if (!empty($platforms) && $platforms != "-1") {
-    $where .= " AND IT202-F2024-Games.id = :platforms";
+    $where .= " AND IT202_F2024_Games.id = :platforms";
     $params[":platforms"] = $platforms;
 }
 if (!empty($genre) && $genre != "-1") {
@@ -64,7 +57,7 @@ if (isset($_GET["limit"]) && !is_nan($_GET["limit"])) {
     }
 }
 $sql .= $where;
-$sql .= " GROUP BY IT202-F2024-Games.id";
+$sql .= " GROUP BY IT202_F2024_Games.id";
 $sql .= " ORDER BY $column $order";
 
 $sql .= " LIMIT $limit";
@@ -91,8 +84,8 @@ $genre = get_genres(); // used for filter dropdown
 $total = 0;
 
 $sql = "SELECT COUNT(DISTINCT id) as c
-FROM IT202-F2024-Games as game
-JOIN IT202-F2024-Games as game on IT202-F2024-Games.id = id
+FROM IT202_F2024_Games as game
+JOIN IT202_F2024_Games as game on IT202_F2024_Games.id = id
 $where";
 try {
     $db = getDB();
@@ -173,11 +166,7 @@ error_log("Games: " . var_export($results, true));
         </div>
     </div>
     <div class="row">
-        <?php foreach ($results as $game): ?>
-            <div class="col-3">
-                <!-- code here -->
-            </div>
-        <?php endforeach; ?>
+        <?php render_table($table); ?>
         <?php if (empty($results)): ?>
             No records to show
         <?php endif; ?>

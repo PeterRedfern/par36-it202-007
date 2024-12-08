@@ -15,7 +15,7 @@ $listsize = 10;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $listsize = $_POST['listsize'];
 }
-$query = "SELECT id, game_title, platforms, genre, release_date, is_api FROM `IT202-F2024-Games` ORDER BY id ASC LIMIT $listsize"; 
+$query = "SELECT id, game_title, platforms, genre, release_date, is_api FROM `IT202_F2024_Games` ORDER BY id ASC LIMIT $listsize"; 
 $db = getDB();                                                                                // ^ makes it so games appear by ordered id number
 $stmt = $db->prepare($query);                                                                 // par36 - 11/23/24
 $results = [];

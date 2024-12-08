@@ -42,7 +42,7 @@ $game = [];
 if ($id > -1) { // par36 - 11/25/24: gets id for many page purposes
     //fetch
     $db = getDB();
-    $query = "SELECT id, game_title, platforms, genre, release_date  FROM `IT202-F2024-Games` WHERE id = :id";
+    $query = "SELECT id, game_title, platforms, genre, release_date  FROM `IT202_F2024_Games` WHERE id = :id";
     try {
         $stmt = $db->prepare($query);
         $stmt->execute([":id" => $id]);

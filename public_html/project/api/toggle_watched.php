@@ -10,7 +10,7 @@ if (isset($_POST["toggleWatched"])) {
         $params = [":id" => $gameId, ":user_id" => $userId];
         $needsDelete = false;
         try {
-            $stmt = $db->prepare("INSERT INTO IT202-F2024-Games(id) VALUES (:id)");
+            $stmt = $db->prepare("INSERT INTO IT202_F2024_Games(id) VALUES (:id)");
             $stmt->execute($params);
             flash("Added to watch list", "success");
         } catch (PDOException $e) {
@@ -24,7 +24,7 @@ if (isset($_POST["toggleWatched"])) {
         }
         if ($needsDelete) {
             try {
-                $stmt = $db->prepare("DELETE FROM IT202-F2024-Games WHERE id = :id AND user_id = :user_id");
+                $stmt = $db->prepare("DELETE FROM IT202_F2024_Games WHERE id = :id AND user_id = :user_id");
                 $stmt->execute($params);
                 flash("Removed from watch list", "success");
             } catch (PDOException $e) {

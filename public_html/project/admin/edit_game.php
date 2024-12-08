@@ -21,7 +21,7 @@ if (isset($_POST["game_title"])) {
     }
     //insert data
     try {
-        insert("IT202-F2024-Games", $games, ["debug" => false, "update_duplicate" => true, "columns_to_update" => ["game_title", "platforms", "genre", "release_date"]]);
+        insert("IT202_F2024_Games", $games, ["debug" => false, "update_duplicate" => true, "columns_to_update" => ["game_title", "platforms", "genre", "release_date"]]);
         flash("Updated record ", "success"); // par36 - 11/25/24: User friendly success message
     } catch (PDOException $e) {
         error_log("Something broke with the query" . var_export($e, true));
@@ -32,7 +32,7 @@ $game = [];
 if ($id > -1) { // par36 - 11/25/24: checks for id from database
     //fetch
     $db = getDB();
-    $query = "SELECT id, game_title, platforms, genre, release_date  FROM `IT202-F2024-Games` WHERE id = :id";
+    $query = "SELECT id, game_title, platforms, genre, release_date  FROM `IT202_F2024_Games` WHERE id = :id";
     try {
         $stmt = $db->prepare($query);
         $stmt->execute([":id" => $id]);
@@ -52,7 +52,7 @@ if ($id > -1) { // par36 - 11/25/24: checks for id from database
 if (isset($_POST["delete"])) { // par36 - 11/23/24: makes delete query for database
     if ($id > -1) { // checks for all ids that are 1 or greater
         $db = getDB(); // gets db
-        $query = "DELETE FROM `IT202-F2024-Games` WHERE id = :id"; // checks db for id to delete
+        $query = "DELETE FROM `IT202_F2024_Games` WHERE id = :id"; // checks db for id to delete
         try {
             $deletereq = $db->prepare($query); // prepares delete query
             $deletereq->execute([":id" => $id]); // executes query

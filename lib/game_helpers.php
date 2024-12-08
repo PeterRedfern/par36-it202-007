@@ -5,7 +5,7 @@ function get_genres()
     $genre = [];
     try {
         $db = getDB();
-        $stmt = $db->prepare("SELECT DISTINCT id,genre FROM IT202-F2024-Games");
+        $stmt = $db->prepare("SELECT DISTINCT id,genre FROM IT202_F2024_Games");
         $stmt->execute();
         $r = $stmt->fetchAll();
         if ($r) {
@@ -23,7 +23,7 @@ function get_platforms()
     $platforms = [];
     try {
         $db = getDB();
-        $stmt = $db->prepare("SELECT DISTINCT id,platforms FROM IT202-F2024-Games");
+        $stmt = $db->prepare("SELECT DISTINCT id,platforms FROM IT202_F2024_Games");
         $stmt->execute();
         $r = $stmt->fetchAll();
         if ($r) {
