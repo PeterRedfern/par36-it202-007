@@ -9,13 +9,13 @@ $type = se($_GET, "type", "", false);
 
 $column = se($_GET, "column", "", false);
 $order = se($_GET, "order", "", false);
-$columns = ["title", "publishedDateTime", "name", "type", "provider", "topic"];
+$columns = ["id", "game_title", "platforms", "genre", "release_date", "is_api"];
 $columnMap = array_map(function ($v) {
     return [$v => $v];
 }, $columns);
 // sanitize
 if (!in_array($column, $columns)) {
-    $column = "title";
+    $column = "game_title";
 }
 if (!in_array($order, ["asc", "desc"])) {
     $order = "asc";
@@ -24,38 +24,29 @@ $params = [];
 
 
 
-$sql = "SELECT SCG.id,title,excerpt,
-0 as is_watched,
-GROUP_CONCAT(DISTINCT SCT.name) AS topics, 
-publishedDateTime, 
-GROUP_CONCAT(DISTINCT SCP.name) AS providers, 
-type 
-FROM SC_Guides as SCG
-JOIN SC_GuideImages as SCGI on SCGI.guide_id = SCG.id
-JOIN SC_Images SCI on SCGI.image_id = SCI.id
-JOIN SC_GuideProviders as SCGP on SCGP.guide_id = SCG.id
-JOIN SC_Providers as SCP on SCGP.provider_id = SCP.id
-JOIN SC_GuideTopics as SCGT on SCGT.guide_id = SCG.id
-JOIN SC_Topics as SCT on SCGT.topic_id = SCT.id";
+$sql = "SELECT g.id,game_title, 0 as is_watched, type 
+FROM IT202_F2024_Games as g
+JOIN IT202_F2024_Usergames as ug on g.id = ug.game_id
+JOIN Users as u on u.id = ug.user_id";
 // the first space is important
-$where = " WHERE not exists (SELECT guide_id FROM SC_UserGuides where guide_id = SCG.id LIMIT 1) ";
+$where = " WHERE not exists (SELECT id FROM IT202_F2024_Games where id = g.id LIMIT 1) ";
 
 
-if (!empty($title)) {
-    $where .= " AND title like :title";
-    $params[":title"] = "%$title%";
+if (!empty($game_title)) {
+    $where .= " AND game_title like :game_title";
+    $params[":game_title"] = "%$game_title%";
 }
-if (!empty($topic) && $topic != "-1") {
-    $where .= " AND SCT.id = :topic";
-    $params[":topic"] = $topic;
+if (!empty($platforms) && $platforms != "-1") {
+    $where .= " AND IT202_F2024_Games.id = :platforms";
+    $params[":platforms"] = $platforms;
 }
-if (!empty($provider) && $provider != "-1") {
-    $where .= " AND SCP.id = :provider";
-    $params[":provider"] = $provider;
+if (!empty($genre) && $genre != "-1") {
+    $where .= " AND type = :genre";
+    $params[":genre"] = $genre;
 }
-if (!empty($type) && $type != "-1") {
-    $where .= " AND type = :type";
-    $params[":type"] = $type;
+if (!empty($release_date)) {
+    $where .= " AND release_date like :release_date";
+    $params[":release_date"] = "%$release_date%";
 }
 $limit = 10;
 if (isset($_GET["limit"]) && !is_nan($_GET["limit"])) {
@@ -65,7 +56,7 @@ if (isset($_GET["limit"]) && !is_nan($_GET["limit"])) {
     }
 }
 $sql .= $where;
-$sql .= " GROUP BY SCG.id";
+$sql .= " GROUP BY IT202_F2024_Games.id";
 $sql .= " ORDER BY $column $order";
 
 $sql .= " LIMIT $limit";
@@ -80,7 +71,7 @@ try {
     }
 } catch (Exception $e) {
     error_log(var_export($e, true));
-    error_log("fun happened");
+    error_log("A Fetch Error Occured");
     flash("Failed to fetch");
 }
 
@@ -92,14 +83,10 @@ try {
 // JOINS also filter (in addition to the WHERE clause)
 $total = 0;
 
-$sql = "SELECT COUNT(DISTINCT SCG.id) as c
-FROM SC_Guides as SCG
-JOIN SC_GuideImages as SCGI on SCGI.guide_id = SCG.id
-JOIN SC_Images SCI on SCGI.image_id = SCI.id
-JOIN SC_GuideProviders as SCGP on SCGP.guide_id = SCG.id
-JOIN SC_Providers as SCP on SCGP.provider_id = SCP.id
-JOIN SC_GuideTopics as SCGT on SCGT.guide_id = SCG.id
-JOIN SC_Topics as SCT on SCGT.topic_id = SCT.id
+$sql = "SELECT COUNT(DISTINCT g.id) as c
+FROM IT202_F2024_Games as g
+JOIN IT202_F2024_Usergames as ug on g.id = ug.game_id
+JOIN Users as u on u.id = ug.user_id
 $where";
 try {
     $db = getDB();
@@ -127,11 +114,11 @@ $results = array_map(function ($item) {
     if (isset($_GET["id"])) {
         unset($_GET["id"]);
     }
-    $item["delete_url"] = get_url("delete_guide.php?id=$id&") . http_build_query($cleaned_get);
-    $item["view_url"] = get_url("view_guide.php?id=$id&") . http_build_query($cleaned_get);
+    $item["delete_url"] = get_url("delete_game.php?id=$id&") . http_build_query($cleaned_get);
+    $item["view_url"] = get_url("display_game.php?id=$id&") . http_build_query($cleaned_get);
     return $item;
 }, $results);
-error_log("Guides: " . var_export($results, true));
+error_log("Games: " . var_export($results, true));
 ?>
 
 <div class="container-fluid">
@@ -140,16 +127,16 @@ error_log("Guides: " . var_export($results, true));
         <form>
             <div class="row">
                 <div class="col">
-                    <?php render_input(["name" => "title", "label" => "Title", "value" => $title]); ?>
+                    <?php render_input(["name" => "game_title", "label" => "Game Title", "value" => $game_title]); ?>
                 </div>
                 <div class="col">
-                    <?php render_input(["name" => "topic", "label" => "Topic", "value" => $topic, "type" => "select", "options" => $topics]); ?>
+                    <?php render_input(["name" => "platforms", "label" => "Platforms", "value" => $platforms, "type" => "select", "options" => $topics]); ?>
                 </div>
                 <div class="col">
-                    <?php render_input(["name" => "type", "label" => "Type", "value" => $type, "type" => "select", "options" => $types]); ?>
+                    <?php render_input(["name" => "genre", "label" => "Genre", "value" => $genre, "type" => "select", "options" => $types]); ?>
                 </div>
                 <div class="col">
-                    <?php render_input(["name" => "provider", "label" => "Providers", "value" => $provider, "type" => "select", "options" => $providers]); ?>
+                    <?php render_input(["name" => "release_date", "label" => "Release Date", "value" => $release_date]); ?>
                 </div>
 
             </div>
@@ -175,11 +162,7 @@ error_log("Guides: " . var_export($results, true));
         </div>
     </div>
     <div class="row">
-        <?php foreach ($results as $guide): ?>
-            <div class="col-3">
-                <!-- code here-->
-            </div>
-        <?php endforeach; ?>
+        <?php render_table($table); ?>
         <?php if (empty($results)): ?>
             No records to show
         <?php endif; ?>
