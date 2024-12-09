@@ -30,7 +30,7 @@ FROM IT202_F2024_Games as g
 JOIN IT202_F2024_Usergames as ug on g.id = ug.game_id
 JOIN Users as u on u.id = ug.user_id";
 // the first space is important
-$where = " WHERE Users.id = :user_id"; //filter by user
+$where = " WHERE u.id = :user_id"; //filter by user
 
 
 if (!empty($game_title)) {
@@ -82,10 +82,11 @@ $genre = get_genres(); // used for filter dropdown
 // JOINS also filter (in addition to the WHERE clause)
 $total = 0;
 
-$sql = "SELECT COUNT(DISTINCT id) as c
-FROM IT202_F2024_Games as game
-JOIN IT202_F2024_Games as game on IT202_F2024_Games.id = id
-$where";
+$sql = "SELECT COUNT(DISTINCT g.id) as c
+FROM IT202_F2024_Games as g
+JOIN IT202_F2024_Usergames as ug on g.id = ug.game_id
+JOIN Users as u on u.id = ug.user_id
+$where"; //filter by user
 try {
     $db = getDB();
     $stmt = $db->prepare($sql);
