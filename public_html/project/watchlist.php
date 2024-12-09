@@ -2,10 +2,10 @@
 require_once(__DIR__ . "/../../partials/nav.php");
 is_logged_in(true);
 //search before query
-$title = se($_GET, "title", "", false);
-$topic = se($_GET, "topic", "", false);
-$provider = se($_GET, "provider", "", false);
-$type = se($_GET, "type", "", false);
+$game_title = se($_GET, "game_title", "", false);
+$platform = se($_GET, "platforms", "", false);
+$genres = se($_GET, "genre", "", false);
+$release_date = se($_GET, "release_date", "", false);
 
 $column = se($_GET, "column", "", false);
 $order = se($_GET, "order", "", false);
@@ -37,13 +37,13 @@ if (!empty($game_title)) {
     $where .= " AND game_title like :game_title";
     $params[":game_title"] = "%$game_title%";
 }
-if (!empty($platforms) && $platforms != "-1") {
+if (!empty($platform) && $platform != "-1") {
     $where .= " AND IT202_F2024_Games.id = :platforms";
-    $params[":platforms"] = $platforms;
+    $params[":platforms"] = $platform;
 }
-if (!empty($genre) && $genre != "-1") {
+if (!empty($genres) && $genres != "-1") {
     $where .= " AND type = :genre";
-    $params[":genre"] = $genre;
+    $params[":genre"] = $genres;
 }
 if (!empty($release_date)) {
     $where .= " AND release_date like :release_date";
@@ -118,8 +118,9 @@ $results = array_map(function ($item) {
     return $item;
 }, $results);
 error_log("Games: " . var_export($results, true));
-?>
 
+$table = ["data" => $results]
+?>
 <div class="container-fluid">
     <h5>Watchlist</h5>
     <div>
@@ -129,10 +130,10 @@ error_log("Games: " . var_export($results, true));
                     <?php render_input(["name" => "game_title", "label" => "Game Title", "value" => $game_title]); ?>
                 </div>
                 <div class="col">
-                    <?php render_input(["name" => "platforms", "label" => "Platforms", "value" => $platforms, "type" => "select", "options" => $topics]); ?>
+                    <?php render_input(["name" => "platforms", "label" => "Platforms", "value" => $platform, "type" => "select", "options" => $platforms]); ?>
                 </div>
                 <div class="col">
-                    <?php render_input(["name" => "genre", "label" => "Genre", "value" => $genre, "type" => "select", "options" => $types]); ?>
+                    <?php render_input(["name" => "genre", "label" => "Genre", "value" => $genres, "type" => "select", "options" => $genre]); ?>
                 </div>
                 <div class="col">
                     <?php render_input(["name" => "release_date", "label" => "Release Date", "value" => $release_date]); ?>

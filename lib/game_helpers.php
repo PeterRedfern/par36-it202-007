@@ -27,11 +27,11 @@ function get_platforms()
         $stmt->execute();
         $r = $stmt->fetchAll();
         if ($r) {
-            $platforms = array_map(fn($t) => [$t["id"] => $t["name"]], $r);
+            $platforms = array_map(fn($t) => [$t["id"] => $t["platforms"]], $r);
             array_unshift($platforms, ["-1" => "Select"]);
         }
     } catch (PDOException $e) {
-        error_log("Error fetching providers: " . var_export($e, true));
+        error_log("Error fetching platforms: " . var_export($e, true));
     }
     return $platforms;
 }

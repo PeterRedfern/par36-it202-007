@@ -2,10 +2,10 @@
 require_once(__DIR__ . "/../../partials/nav.php");
 is_logged_in(true);
 //search before query
-$title = se($_GET, "title", "", false);
-$topic = se($_GET, "topic", "", false);
-$provider = se($_GET, "provider", "", false);
-$type = se($_GET, "type", "", false);
+$game_title = se($_GET, "game_title", "", false);
+$platforms = se($_GET, "platforms", "", false);
+$genre = se($_GET, "genre", "", false);
+$release_date = se($_GET, "release_date", "", false);
 
 $column = se($_GET, "column", "", false);
 $order = se($_GET, "order", "", false);
@@ -75,9 +75,8 @@ try {
     flash("Failed to fetch");
 }
 
-//$topics = get_topics(); //used for filter dropdown
-//$providers = get_providers(); // used for filter dropdown
-//$types = get_types(); // used for filter dropdown
+$platforms = get_platforms(); //used for filter dropdown
+$genre = get_genres(); // used for filter dropdown
 
 // get total possible values based on filters
 // JOINS also filter (in addition to the WHERE clause)
@@ -130,10 +129,10 @@ error_log("Games: " . var_export($results, true));
                     <?php render_input(["name" => "game_title", "label" => "Game Title", "value" => $game_title]); ?>
                 </div>
                 <div class="col">
-                    <?php render_input(["name" => "platforms", "label" => "Platforms", "value" => $platforms, "type" => "select", "options" => $topics]); ?>
+                    <?php render_input(["name" => "platforms", "label" => "Platforms", "value" => $platforms, "type" => "select", "options" => $platforms]); ?>
                 </div>
                 <div class="col">
-                    <?php render_input(["name" => "genre", "label" => "Genre", "value" => $genre, "type" => "select", "options" => $types]); ?>
+                    <?php render_input(["name" => "genre", "label" => "Genre", "value" => $genre, "type" => "select", "options" => $genre]); ?>
                 </div>
                 <div class="col">
                     <?php render_input(["name" => "release_date", "label" => "Release Date", "value" => $release_date]); ?>
