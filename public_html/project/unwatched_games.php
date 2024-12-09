@@ -3,8 +3,8 @@ require_once(__DIR__ . "/../../partials/nav.php");
 is_logged_in(true);
 //search before query
 $game_title = se($_GET, "game_title", "", false);
-$platforms = se($_GET, "platforms", "", false);
-$genre = se($_GET, "genre", "", false);
+$platform = se($_GET, "platforms", "", false);
+$genres = se($_GET, "genre", "", false);
 $release_date = se($_GET, "release_date", "", false);
 
 $column = se($_GET, "column", "", false);
@@ -24,7 +24,7 @@ $params = [];
 
 
 
-$sql = "SELECT g.id,game_title, 0 as is_watched, type 
+$sql = "SELECT g.id,game_title, 0 as is_watched,
 FROM IT202_F2024_Games as g
 JOIN IT202_F2024_Usergames as ug on g.id = ug.game_id
 JOIN Users as u on u.id = ug.user_id";
@@ -118,8 +118,8 @@ $results = array_map(function ($item) {
     return $item;
 }, $results);
 error_log("Games: " . var_export($results, true));
+$table = ["data" => $results];
 ?>
-
 <div class="container-fluid">
     <h5>Unwatched Games</h5>
     <div>
@@ -129,10 +129,10 @@ error_log("Games: " . var_export($results, true));
                     <?php render_input(["name" => "game_title", "label" => "Game Title", "value" => $game_title]); ?>
                 </div>
                 <div class="col">
-                    <?php render_input(["name" => "platforms", "label" => "Platforms", "value" => $platforms, "type" => "select", "options" => $platforms]); ?>
+                    <?php render_input(["name" => "platforms", "label" => "Platforms", "value" => $platform, "type" => "select", "options" => $platforms]); ?>
                 </div>
                 <div class="col">
-                    <?php render_input(["name" => "genre", "label" => "Genre", "value" => $genre, "type" => "select", "options" => $genre]); ?>
+                    <?php render_input(["name" => "genre", "label" => "Genre", "value" => $genres, "type" => "select", "options" => $genre]); ?>
                 </div>
                 <div class="col">
                     <?php render_input(["name" => "release_date", "label" => "Release Date", "value" => $release_date]); ?>

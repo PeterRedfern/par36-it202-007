@@ -8,13 +8,13 @@
     if (!$_data) {
         $_data = [];
     }
-    $_view_url = se($data, "view_url", "display_game.php", false); 
+    $_view_url = se($data, "view_url", "display_game.php", false);
     $_view_label = se($data, "view_label", "View", false); // par36 - 11/24/24: edited to add View
     $_view_classes = se($data, "view_classes", "btn btn-primary", false);
     $_edit_url = se($data, "edit_url", "edit_game.php", false);
     $_edit_label = se($data, "edit_label", "Edit (Admin Only)", false); // par36 - 11/23/24: edited to match the functionality of the page
     $_edit_classes = se($data, "edit_classes", "btn btn-secondary", false);
-    $_delete_url = se($data, "delete_url", "delete_game.php", false); 
+    $_delete_url = se($data, "delete_url", "delete_game.php", false);
     $_delete_label = se($data, "delete_label", "Delete (Admin Only)", false); // par36 - 11/23/24: edited to add Delete
     $_delete_classes = se($data, "delete_classes", "btn btn-danger", false);
     $_primary_key_column = se($data, "primary_key", "id", false); // used for the url generation
@@ -88,7 +88,21 @@
                                         <input type="submit" class="<?php se($_post_self_form, "classes"); ?>" value="<?php se($_post_self_form, "label", "Submit"); ?>" />
                                     </form>
                                 <?php endif; ?>
+
                             </td>
+                        <?php endif; ?>
+                        <?php if (is_logged_in() && isset($data["is_watched"])): ?>
+                            <?php /* is_watched toggle */
+                            $redirect_url = se($_SERVER, "PHP_SELF", "", false) . '?' . http_build_query($_GET);
+                            ?>
+                            <form method="POST" action="<?php echo get_url("api/toggle_watched.php"); ?>">
+                                <input type="hidden" name="game_id" value="<?php se($data, "id"); ?>" />
+                                <input type="hidden" name="toggleWatched" />
+                                <input type="hidden" name="route" value="<?php echo $redirect_url ?>" />
+                                <button style="background-color: transparent; border: none !important;">
+                                    <?php render_like(["value" => $data["is_watched"]]); ?>
+                                </button>
+                            </form>
                         <?php endif; ?>
                     </tr>
                 <?php endforeach; ?>

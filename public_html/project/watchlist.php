@@ -74,7 +74,7 @@ try {
     error_log("A Fetch Error Occured");
     flash("Failed to fetch");
 }
-
+error_log(var_export($results, true)); // par 36 - 12/9/24: test exports
 $platforms = get_platforms(); //used for filter dropdown
 $genre = get_genres(); // used for filter dropdown
 
@@ -113,8 +113,8 @@ $results = array_map(function ($item) {
     if (isset($_GET["id"])) {
         unset($_GET["id"]);
     }
-    $item["delete_url"] = get_url("delete_game.php?id=$id&") . http_build_query($cleaned_get);
-    $item["view_url"] = get_url("display_game.php?id=$id&") . http_build_query($cleaned_get);
+    $item["delete_url"] = get_url("delete_game.php?id=$id") . http_build_query($cleaned_get);
+    $item["view_url"] = get_url("display_game.php?id=$id") . http_build_query($cleaned_get);
     return $item;
 }, $results);
 error_log("Games: " . var_export($results, true));
