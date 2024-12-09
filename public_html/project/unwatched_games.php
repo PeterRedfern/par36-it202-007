@@ -6,6 +6,7 @@ $game_title = se($_GET, "game_title", "", false);
 $platform = se($_GET, "platforms", "", false);
 $genres = se($_GET, "genre", "", false);
 $release_date = se($_GET, "release_date", "", false);
+$is_api = se($_GET, "is_api", "", false);
 
 $column = se($_GET, "column", "", false);
 $order = se($_GET, "order", "", false);
@@ -24,12 +25,11 @@ $params = [];
 
 
 
-$sql = "SELECT g.id,game_title, 0 as is_watched,
+$sql = "SELECT g.id, game_title, platforms, genre, release_date, 0 as is_watched
 FROM IT202_F2024_Games as g
-JOIN IT202_F2024_Usergames as ug on g.id = ug.game_id
-JOIN Users as u on u.id = ug.user_id";
+JOIN IT202_F2024_Usergames as ug";
 // the first space is important
-$where = " WHERE not exists (SELECT id FROM IT202_F2024_Games where id = g.id LIMIT 1) ";
+$where = " WHERE not exists (SELECT id FROM IT202_F2024_Usergames where id = ug.game_id LIMIT 1)";
 
 
 if (!empty($game_title)) {
@@ -37,7 +37,7 @@ if (!empty($game_title)) {
     $params[":game_title"] = "%$game_title%";
 }
 if (!empty($platforms) && $platforms != "-1") {
-    $where .= " AND IT202_F2024_Games.id = :platforms";
+    $where .= " AND g.platforms = :platforms";
     $params[":platforms"] = $platforms;
 }
 if (!empty($genre) && $genre != "-1") {
@@ -56,7 +56,7 @@ if (isset($_GET["limit"]) && !is_nan($_GET["limit"])) {
     }
 }
 $sql .= $where;
-$sql .= " GROUP BY IT202_F2024_Games.id";
+$sql .= " GROUP BY g.id";
 $sql .= " ORDER BY $column $order";
 
 $sql .= " LIMIT $limit";
@@ -84,8 +84,7 @@ $total = 0;
 
 $sql = "SELECT COUNT(DISTINCT g.id) as c
 FROM IT202_F2024_Games as g
-JOIN IT202_F2024_Usergames as ug on g.id = ug.game_id
-JOIN Users as u on u.id = ug.user_id
+JOIN IT202_F2024_Usergames as ug
 $where";
 try {
     $db = getDB();
@@ -113,12 +112,17 @@ $results = array_map(function ($item) {
     if (isset($_GET["id"])) {
         unset($_GET["id"]);
     }
-    $item["delete_url"] = get_url("delete_game.php?id=$id&") . http_build_query($cleaned_get);
-    $item["view_url"] = get_url("display_game.php?id=$id&") . http_build_query($cleaned_get);
+    //$item["delete_url"] = get_url("delete_game.php?id=$id&") . http_build_query($cleaned_get);
+    //$item["view_url"] = get_url("display_game.php?id=$id&") . http_build_query($cleaned_get);
     return $item;
 }, $results);
 error_log("Games: " . var_export($results, true));
 $table = ["data" => $results];
+?>
+<?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $limit = $_POST['limit'];
+}
 ?>
 <div class="container-fluid">
     <h5>Unwatched Games</h5>
@@ -136,6 +140,9 @@ $table = ["data" => $results];
                 </div>
                 <div class="col">
                     <?php render_input(["name" => "release_date", "label" => "Release Date", "value" => $release_date]); ?>
+                </div>
+                <div class="col">
+                    <?php render_input(["name" => "limit", "label" => "List Size", "value" => $limit]); ?>
                 </div>
 
             </div>

@@ -113,13 +113,18 @@ $results = array_map(function ($item) {
     if (isset($_GET["id"])) {
         unset($_GET["id"]);
     }
-    $item["delete_url"] = get_url("delete_game.php?id=$id") . http_build_query($cleaned_get);
-    $item["view_url"] = get_url("display_game.php?id=$id") . http_build_query($cleaned_get);
+    //$item["delete_url"] = get_url("delete_game.php?id=$id") . http_build_query($cleaned_get);
+    //$item["view_url"] = get_url("display_game.php?id=$id") . http_build_query($cleaned_get);
     return $item;
 }, $results);
 error_log("Games: " . var_export($results, true));
 
 $table = ["data" => $results]
+?>
+<?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $limit = $_POST['limit'];
+}
 ?>
 <div class="container-fluid">
     <h5>Watchlist</h5>
@@ -137,6 +142,9 @@ $table = ["data" => $results]
                 </div>
                 <div class="col">
                     <?php render_input(["name" => "release_date", "label" => "Release Date", "value" => $release_date]); ?>
+                </div>
+                <div class="col">
+                    <?php render_input(["name" => "limit", "label" => "List Size", "value" => $limit]); ?>
                 </div>
 
             </div>
