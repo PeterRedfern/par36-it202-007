@@ -25,7 +25,7 @@ $params = [];
 $params[":user_id"] = get_user_id();
 
 
-$sql = "SELECT g.id, game_title, platforms, genre, release_date, 1 as is_watched, type
+$sql = "SELECT g.id, game_title, platforms, genre, release_date, 1 as is_watched
 FROM IT202_F2024_Games as g
 JOIN IT202_F2024_Usergames as ug on g.id = ug.game_id
 JOIN Users as u on u.id = ug.user_id";
@@ -57,7 +57,6 @@ if (isset($_GET["limit"]) && !is_nan($_GET["limit"])) {
     }
 }
 $sql .= $where;
-$sql .= " GROUP BY IT202_F2024_Games.id";
 $sql .= " ORDER BY $column $order";
 
 $sql .= " LIMIT $limit";
