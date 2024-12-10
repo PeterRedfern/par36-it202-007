@@ -20,10 +20,14 @@ if (!in_array($column, $columns)) {
 if (!in_array($order, ["asc", "desc"])) {
     $order = "asc";
 }
+$user_check = " (SELECT IFNULL(count(1), 0) FROM IT202_F2024_Usergames WHERE user_id = ug.user_id and game_id = g.id) as total_watched,";
+
 $params = [];
-$sql = "SELECT g.id, game_title, platforms, genre, release_date, 1 as is_watched
+$sql = "SELECT g.id, game_title, platforms, genre, username, $user_check release_date, 1 as is_watched
 FROM IT202_F2024_Games as g
-JOIN IT202_F2024_Usergames as ug on g.id = ug.game_id";
+JOIN IT202_F2024_Usergames as ug on g.id = ug.game_id
+JOIN Users as u on u.id = ug.user_id";
+$where = "  1=1,";
 
 if (!empty($game_title)) {
     $where .= " AND game_title like :game_title";
@@ -75,7 +79,8 @@ $total = 0;
 
 $sql = "SELECT COUNT(DISTINCT g.id) as c
 FROM IT202_F2024_Games as g
-JOIN IT202_F2024_Usergames as ug on g.id = ug.game_id"; 
+JOIN IT202_F2024_Usergames as ug on g.id = ug.game_id
+JOIN Users as u on u.id = ug.user_id";
 try {
     $db = getDB();
     $stmt = $db->prepare($sql);
