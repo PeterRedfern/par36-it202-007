@@ -3,19 +3,18 @@
     //setup some variables for readability
     $_extra_classes = se($data, "extra_classes", "", false);
     $_title = se($data, "title", "", false);
-    $title = " ";
     $_data = isset($data["data"]) ? $data["data"] : [];
     if (!$_data) {
         $_data = [];
     }
-    $_view_url = se($data, "view_url", "display_game.php", false);
-    $_view_label = se($data, "view_label", "View", false); // par36 - 11/24/24: edited to add View
+    $_view_url = se($data, "view_url", "", false);
+    $_view_label = se($data, "view_label", "View", false);
     $_view_classes = se($data, "view_classes", "btn btn-primary", false);
-    $_edit_url = se($data, "edit_url", "edit_game.php", false);
-    $_edit_label = se($data, "edit_label", "Edit (Admin Only)", false); // par36 - 11/23/24: edited to match the functionality of the page
+    $_edit_url = se($data, "edit_url", "", false);
+    $_edit_label = se($data, "edit_label", "Edit", false);
     $_edit_classes = se($data, "edit_classes", "btn btn-secondary", false);
-    $_delete_url = se($data, "delete_url", "delete_game.php", false);
-    $_delete_label = se($data, "delete_label", "Delete (Admin Only)", false); // par36 - 11/23/24: edited to add Delete
+    $_delete_url = se($data, "delete_url", "", false);
+    $_delete_label = se($data, "delete_label", "Delete", false);
     $_delete_classes = se($data, "delete_classes", "btn btn-danger", false);
     $_primary_key_column = se($data, "primary_key", "id", false); // used for the url generation
     //TODO persist query params (future lesson)

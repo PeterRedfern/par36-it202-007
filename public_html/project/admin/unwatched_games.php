@@ -1,6 +1,11 @@
 <?php
-require_once(__DIR__ . "/../../partials/nav.php");
+require_once(__DIR__ . "/../../../partials/nav.php");
 is_logged_in(true);
+
+if (!has_role("Admin")) {
+    flash("You don't have permission to view this page", "warning");
+    die(header("Location: $BASE_PATH" . "/home.php"));
+}
 //search before query
 $game_title = se($_GET, "game_title", "", false);
 $platform = se($_GET, "platforms", "", false);
@@ -116,7 +121,7 @@ $results = array_map(function ($item) {
     return $item;
 }, $results);
 error_log("Games: " . var_export($results, true));
-$table = ["data" => $results];
+$table = ["data" => $results, "view_url" => get_url("admin/display_game.php")];
 ?>
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -173,11 +178,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php endif; ?>
     </div>
     <div class="row">
-        <?php include(__DIR__ . "/../../partials/pagination_nav.php"); ?>
+        <?php include(__DIR__ . "/../../../partials/pagination_nav.php"); ?>
     </div>
 </div>
 
 <?php
 //note we need to go up 1 more directory
-require_once(__DIR__ . "/../../partials/flash.php");
+require_once(__DIR__ . "/../../../partials/flash.php");
 ?>

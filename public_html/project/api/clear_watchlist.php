@@ -10,7 +10,7 @@ if(!has_role("Admin") && $user_id != get_user_id()){
 
 try{
     $db = getDB();
-    $query = "DELETE FROM IT202_F2024_Usergames WHERE id = :user_id";
+    $query = "DELETE FROM IT202_F2024_Usergames WHERE user_id = :user_id";
     $params = [":user_id"=>$user_id];
     $stmt = $db->prepare($query);
     $stmt->execute($params);

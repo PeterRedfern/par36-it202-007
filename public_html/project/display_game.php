@@ -6,7 +6,7 @@ $id = se($_GET, "id", -1, false);
 if (isset($_POST["delete"])) { // par36 - 11/23/24: makes delete query
     if ($id > -1) { // checks for all ids that are 1 or greater
         try {
-            header("Location: " . get_url("delete_game.php?id=$id")); // redirects to delete_game when clicked
+            header("Location: " . get_url("admin/delete_game.php?id=$id")); // redirects to delete_game when clicked
         } catch (PDOException $e) {
             error_log("Error Deleting: " . var_export($e, true)); // logs error message
             flash("Delete Unsuccessful", "danger"); // sends error message to user
@@ -18,7 +18,7 @@ $id = se($_GET, "id", -1, false);
 if (isset($_POST["edit"])) { // par36 - 11/23/24: makes edit query
     if ($id > -1) { // checks for all ids that are 1 or greater
         try {
-            header("Location: " . get_url("edit_game.php?id=$id")); // redirects to edit_game when clicked
+            header("Location: " . get_url("admin/edit_game.php?id=$id")); // redirects to edit_game when clicked
         } catch (PDOException $e) {
             error_log("Error redirecting: " . var_export($e, true)); // logs error message
             flash("Redirect Unsuccessful", "danger"); // sends error message to user
@@ -56,6 +56,7 @@ if ($id > -1) { // par36 - 11/25/24: gets id for many page purposes
     }
 } else {
     flash("Invalid id passed", "danger");
+    die(header("Location: $BASE_PATH" . "list_games.php")); // redirects to list_games when failed
 }
 
 if ($game) {

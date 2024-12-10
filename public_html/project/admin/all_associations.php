@@ -20,7 +20,7 @@ if (!in_array($column, $columns)) {
 if (!in_array($order, ["asc", "desc"])) {
     $order = "asc";
 }
-
+$params = [];
 $sql = "SELECT g.id, game_title, platforms, genre, release_date, 1 as is_watched
 FROM IT202_F2024_Games as g
 JOIN IT202_F2024_Usergames as ug on g.id = ug.game_id";
@@ -55,6 +55,7 @@ $db = getDB();
 $results = [];
 try {
     $stmt = $db->prepare($sql);
+    $stmt->execute($params);
     $r = $stmt->fetchAll();
     if ($r) {
         $results = $r;
@@ -78,6 +79,7 @@ JOIN IT202_F2024_Usergames as ug on g.id = ug.game_id";
 try {
     $db = getDB();
     $stmt = $db->prepare($sql);
+    $stmt->execute($params);
     $r = $stmt->fetch();
     if ($r) {
         $total = (int)$r["c"]; // called my virtual/temp column "c" for count
@@ -106,7 +108,7 @@ $results = array_map(function ($item) {
 }, $results);
 error_log("Games: " . var_export($results, true));
 
-$table = ["data" => $results]
+$table = ["data" => $results, "edit_url" => get_url("admin/edit_game.php")]
 ?>
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -114,7 +116,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 <div class="container-fluid">
-    <h5>Watchlist</h5>
+    <h5>All Watched Games</h5>
     <div>
         <form>
             <div class="row">

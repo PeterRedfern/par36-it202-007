@@ -43,7 +43,8 @@ session_start();
                 <?php if (is_logged_in()) : ?>
                     <li class="nav-item"><a class="nav-link" href="<?php echo get_url('home.php'); ?>">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="<?php echo get_url('profile.php'); ?>">Profile</a></li>
-                    <li class="nav-item"><a class="nav-link" href="<?php echo get_url('admin/list_games.php'); ?>">List Games</a></li> <!-- par36 - 11/25/24: added list_games here so all roles can see games -->
+                    <li class="nav-item"><a class="nav-link" href="<?php echo get_url('list_games.php'); ?>">List Games</a></li> <!-- par36 - 11/25/24: added list_games here so all roles can see games -->
+                    <li class="nav-item"><a class="nav-link" href="<?php echo get_url('watchlist.php'); ?>">Watchlist</a></li>
                 <?php endif; ?>
                 <?php if (!is_logged_in()) : ?>
                     <li class="nav-item"><a class="nav-link" href="<?php echo get_url('login.php'); ?>">Login</a></li>
@@ -59,7 +60,8 @@ session_start();
                             <li><a class="dropdown-item" href="<?php echo get_url('admin/list_roles.php'); ?>">List Roles</a></li>
                             <li><a class="dropdown-item" href="<?php echo get_url('admin/assign_roles.php'); ?>">Assign Roles</a></li> <!-- par36 - 11/20/24: adding 2 more pages (below) to be admin accessable -->
                             <li><a class="dropdown-item" href="<?php echo get_url('admin/create_game.php'); ?>">Create Game</a></li> <!-- new page -->
-                            <li><a class="dropdown-item" href="<?php echo get_url('admin/list_games.php'); ?>">List Games</a></li> <!-- new page -->
+                            <li><a class="dropdown-item" href="<?php echo get_url('admin/unwatched_games.php'); ?>">Unwatched Games</a></li>
+                            <li><a class="dropdown-item" href="<?php echo get_url('admin/all_associations.php'); ?>">All Watched Games</a></li>
                         </ul>
                     </li>
                 <?php endif; ?>

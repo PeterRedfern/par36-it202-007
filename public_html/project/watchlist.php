@@ -119,7 +119,7 @@ $results = array_map(function ($item) {
 }, $results);
 error_log("Games: " . var_export($results, true));
 
-$table = ["data" => $results, $game_title]
+$table = ["data" => $results, "view_url" => get_url("display_game.php")]
 ?>
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
