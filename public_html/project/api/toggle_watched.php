@@ -3,14 +3,14 @@ session_start();
 require(__DIR__ . "/../../../lib/functions.php");
 
 if (isset($_POST["toggleWatched"])) {
-    $gameId = se($_POST, "id", -1, false);
+    $gameId = se($_POST, "game_id", -1, false);
     $userId = get_user_id();
     if ($userId) {
         $db = getDB();
-        $params = [":id" => $gameId, ":user_id" => $userId];
+        $params = [":game_id" => $gameId, ":user_id" => $userId];
         $needsDelete = false;
         try {
-            $stmt = $db->prepare("INSERT INTO IT202_F2024_Games(id) VALUES (:id)");
+            $stmt = $db->prepare("INSERT INTO IT202_F2024_Usergames(user_id, game_id) VALUES (:user_id, :game_id)");
             $stmt->execute($params);
             flash("Added to watch list", "success");
         } catch (PDOException $e) {
@@ -24,7 +24,7 @@ if (isset($_POST["toggleWatched"])) {
         }
         if ($needsDelete) {
             try {
-                $stmt = $db->prepare("DELETE FROM IT202_F2024_Games WHERE id = :id AND user_id = :user_id");
+                $stmt = $db->prepare("DELETE FROM IT202_F2024_Usergames WHERE game_id = :game_id AND user_id = :user_id");
                 $stmt->execute($params);
                 flash("Removed from watch list", "success");
             } catch (PDOException $e) {

@@ -1,12 +1,11 @@
 <?php
-require_once(__DIR__ . "/../../partials/nav.php");
+require_once(__DIR__ . "/../../../partials/nav.php");
 is_logged_in(true);
 //search before query
 $game_title = se($_GET, "game_title", "", false);
 $platform = se($_GET, "platforms", "", false);
 $genres = se($_GET, "genre", "", false);
 $release_date = se($_GET, "release_date", "", false);
-$is_api = se($_GET, "is_api", "", false);
 
 $column = se($_GET, "column", "", false);
 $order = se($_GET, "order", "", false);
@@ -21,27 +20,22 @@ if (!in_array($column, $columns)) {
 if (!in_array($order, ["asc", "desc"])) {
     $order = "asc";
 }
-$params = [];
 
-
-
-$sql = "SELECT g.id, game_title, platforms, genre, release_date, 0 as is_watched
-FROM IT202_F2024_Games as g";
-// the first space is important
-$where = " WHERE not exists (SELECT game_id FROM IT202_F2024_Usergames as ug where ug.game_id = g.id LIMIT 1)";
-
+$sql = "SELECT g.id, game_title, platforms, genre, release_date, 1 as is_watched
+FROM IT202_F2024_Games as g
+JOIN IT202_F2024_Usergames as ug on g.id = ug.game_id";
 
 if (!empty($game_title)) {
     $where .= " AND game_title like :game_title";
     $params[":game_title"] = "%$game_title%";
 }
-if (!empty($platforms) && $platforms != "-1") {
-    $where .= " AND g.platforms = :platforms";
-    $params[":platforms"] = $platforms;
+if (!empty($platform) && $platform != "-1") {
+    $where .= " AND IT202_F2024_Games.id = :platforms";
+    $params[":platforms"] = $platform;
 }
-if (!empty($genre) && $genre != "-1") {
+if (!empty($genres) && $genres != "-1") {
     $where .= " AND type = :genre";
-    $params[":genre"] = $genre;
+    $params[":genre"] = $genres;
 }
 if (!empty($release_date)) {
     $where .= " AND release_date like :release_date";
@@ -54,8 +48,6 @@ if (isset($_GET["limit"]) && !is_nan($_GET["limit"])) {
         $limit = 10;
     }
 }
-$sql .= $where;
-$sql .= " GROUP BY g.id";
 $sql .= " ORDER BY $column $order";
 
 $sql .= " LIMIT $limit";
@@ -63,7 +55,6 @@ $db = getDB();
 $results = [];
 try {
     $stmt = $db->prepare($sql);
-    $stmt->execute($params);
     $r = $stmt->fetchAll();
     if ($r) {
         $results = $r;
@@ -73,7 +64,7 @@ try {
     error_log("A Fetch Error Occured");
     flash("Failed to fetch");
 }
-
+error_log(var_export($results, true)); // par 36 - 12/9/24: test exports
 $platforms = get_platforms(); //used for filter dropdown
 $genre = get_genres(); // used for filter dropdown
 
@@ -83,12 +74,10 @@ $total = 0;
 
 $sql = "SELECT COUNT(DISTINCT g.id) as c
 FROM IT202_F2024_Games as g
-JOIN IT202_F2024_Usergames as ug
-$where";
+JOIN IT202_F2024_Usergames as ug on g.id = ug.game_id"; 
 try {
     $db = getDB();
     $stmt = $db->prepare($sql);
-    $stmt->execute($params);
     $r = $stmt->fetch();
     if ($r) {
         $total = (int)$r["c"]; // called my virtual/temp column "c" for count
@@ -111,12 +100,13 @@ $results = array_map(function ($item) {
     if (isset($_GET["id"])) {
         unset($_GET["id"]);
     }
-    //$item["delete_url"] = get_url("delete_game.php?id=$id&") . http_build_query($cleaned_get);
-    //$item["view_url"] = get_url("display_game.php?id=$id&") . http_build_query($cleaned_get);
+    //$item["delete_url"] = get_url("delete_game.php?id=$id") . http_build_query($cleaned_get);
+    //$item["view_url"] = get_url("display_game.php?id=$id") . http_build_query($cleaned_get);
     return $item;
 }, $results);
 error_log("Games: " . var_export($results, true));
-$table = ["data" => $results];
+
+$table = ["data" => $results]
 ?>
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -124,7 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 <div class="container-fluid">
-    <h5>Unwatched Games</h5>
+    <h5>Watchlist</h5>
     <div>
         <form>
             <div class="row">
@@ -167,17 +157,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
     <div class="row">
+        <div class="col">
+            <a class="btn btn-warning" href="api/clear_watchlist.php">Clear List</a>
+        </div>
+    </div>
+    <div class="row">
         <?php render_table($table); ?>
         <?php if (empty($results)): ?>
             No records to show
         <?php endif; ?>
     </div>
     <div class="row">
-        <?php include(__DIR__ . "/../../partials/pagination_nav.php"); ?>
+        <?php include(__DIR__ . "/../../../partials/pagination_nav.php"); ?>
     </div>
 </div>
 
 <?php
 //note we need to go up 1 more directory
-require_once(__DIR__ . "/../../partials/flash.php");
+require_once(__DIR__ . "/../../../partials/flash.php");
 ?>

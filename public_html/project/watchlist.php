@@ -119,7 +119,7 @@ $results = array_map(function ($item) {
 }, $results);
 error_log("Games: " . var_export($results, true));
 
-$table = ["data" => $results]
+$table = ["data" => $results, $game_title]
 ?>
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -144,7 +144,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <?php render_input(["name" => "release_date", "label" => "Release Date", "value" => $release_date]); ?>
                 </div>
                 <div class="col">
-                    <?php render_input(["name" => "limit", "label" => "List Size", "value" => $limit]); ?>
+                    <?php render_input(["name" => "limit", "label" => "List Size (Specify 1 - 100)", "value" => $limit]); ?>
                 </div>
 
             </div>
