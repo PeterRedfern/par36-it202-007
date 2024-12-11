@@ -65,7 +65,7 @@
                 <?php foreach ($_data as $row) : ?>
                     <tr>
                         <?php foreach ($row as $k => $v) : ?>
-                            <?php if ($k == "username"): ?>
+                            <?php if ($k == "username"): // par36 - 12/11/24: creates the clickable links from the usernames ?>
                                 <td><a href="<?php echo get_url("profile.php") . "?id=" . $row["user_id"]; ?>"><?php se($row, "username"); ?></a></td>
                             <?php else: ?>
                                 <?php if (!in_array($k, $_ignored_columns)): ?>
@@ -94,7 +94,8 @@
 
                             </td>
                         <?php endif; ?>
-                        <?php if (is_logged_in() && isset($row["is_watched"])): ?>
+                        <?php if (is_logged_in() && isset($row["is_watched"])):
+                            // par36 - 12/11/24: makes the is_watched column in the table ?>
                             <td>
                                 <?php /* is_watched toggle */
                                 $redirect_url = se($_SERVER, "PHP_SELF", "", false) . '?' . http_build_query($_GET);

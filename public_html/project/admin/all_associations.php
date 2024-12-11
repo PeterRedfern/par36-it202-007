@@ -22,7 +22,7 @@ if (!in_array($order, ["asc", "desc"])) {
     $order = "asc";
 } 
 $user_check = " (SELECT count(user_id) FROM IT202_F2024_Usergames WHERE user_id = ug.user_id) as total_watched,";
-
+// par36 - 12/11/24: gets ammount of users watched, then gets game info, is watched and user_id for table
 $params = [];
 $sql = "SELECT g.id, game_title, platforms, genre, username, $user_check release_date, 1 as is_watched, user_id
 FROM IT202_F2024_Games as g
@@ -50,7 +50,7 @@ if(!empty($users)) {
     $where .= " AND username like :users";
     $params[":users"] = "%$users%";
 }
-$limit = 10;
+$limit = 10; // par36 - 12/11/24: sets default to 10, and makes the limit 0 to 100
 if (isset($_GET["limit"]) && !is_nan($_GET["limit"])) {
     $limit = (int)$_GET["limit"];
     if ($limit < 0 || $limit > 100) {
@@ -87,6 +87,7 @@ $genre = get_genres(); // used for filter dropdown
 // JOINS also filter (in addition to the WHERE clause)
 $total = 0;
 
+// par36 - 12/11/24: creates count query which goes through each games and counts each one for the total
 $sql = "SELECT COUNT(DISTINCT g.id) as c
 FROM IT202_F2024_Games as g
 JOIN IT202_F2024_Usergames as ug on g.id = ug.game_id
@@ -124,6 +125,7 @@ $results = array_map(function ($item) {
 }, $results);
 error_log("Games: " . var_export($results, true));
 
+// par36 - 12/11/24 - creates table to display data
 $table = ["data" => $results, "view_url" => get_url("display_game.php")]
 ?>
 <?php
@@ -175,7 +177,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
     <div class="row">
         <div class="col">
-            Results <?php echo count($results) . "/" . $total; ?>
+            Results <?php echo count($results) . "/" . $total; // par36 - 12/11/24: gets the count of all results (filtered) and the total (all)?>
         </div>
     </div>
     <div class="row">
@@ -184,7 +186,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
     <div class="row">
-        <?php render_table($table); ?>
+        <?php render_table($table); // par36 - 12/11/24: renders table ?>
         <?php if (empty($results)): ?>
             No records to show
         <?php endif; ?>

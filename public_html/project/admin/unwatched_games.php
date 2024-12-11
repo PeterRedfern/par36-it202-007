@@ -29,7 +29,7 @@ if (!in_array($order, ["asc", "desc"])) {
 $params = [];
 
 
-
+// par36 - 12/11/24: gets all unassociated games
 $sql = "SELECT g.id, game_title, platforms, genre, release_date, 0 as is_watched
 FROM IT202_F2024_Games as g";
 // the first space is important
@@ -52,7 +52,7 @@ if (!empty($release_date)) {
     $where .= " AND release_date like :release_date";
     $params[":release_date"] = "%$release_date%";
 }
-$limit = 10;
+$limit = 10; // par36 - 12/11/24: sets default to 10, and makes the limit 0 to 100
 if (isset($_GET["limit"]) && !is_nan($_GET["limit"])) {
     $limit = (int)$_GET["limit"];
     if ($limit < 0 || $limit > 100) {
@@ -86,6 +86,7 @@ $genre = get_genres(); // used for filter dropdown
 // JOINS also filter (in addition to the WHERE clause)
 $total = 0;
 
+// par36 - 12/11/24: creates count query which goes through each games and counts each one for the total
 $sql = "SELECT COUNT(DISTINCT g.id) as c
 FROM IT202_F2024_Games as g
 JOIN IT202_F2024_Usergames as ug
@@ -121,6 +122,8 @@ $results = array_map(function ($item) {
     return $item;
 }, $results);
 error_log("Games: " . var_export($results, true));
+
+// par36 - 12/11/24: displays table parameters
 $table = ["data" => $results, "view_url" => get_url("admin/display_game.php")];
 ?>
 <?php
@@ -168,11 +171,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
     <div class="row">
         <div class="col">
-            Results <?php echo count($results) . "/" . $total; ?>
+            Results <?php echo count($results) . "/" . $total; // par36 - 12/11/24: gets the count of all results (filtered) and the total (all) ?>
         </div>
     </div>
     <div class="row">
-        <?php render_table($table); ?>
+        <?php render_table($table); // par36 - 12/11/24: renders table ?>
         <?php if (empty($results)): ?>
             No records to show
         <?php endif; ?>

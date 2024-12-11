@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 $assoc_check = "";
 $params = [];
 if (is_logged_in()) {
-    // return a 1 or 0 based on whether or not this guide is watched by this user
+    // par36 - 12/11/24: returns a 1 or 0 based on whether or not the game is watched by this user
     $assoc_check = " (SELECT IFNULL(count(1), 0) FROM IT202_F2024_Usergames WHERE user_id = :user_id and game_id = g.id LIMIT 1) as is_watched,";
     $params[":user_id"] = get_user_id();
 }
