@@ -62,6 +62,7 @@ session_start();
                             <li><a class="dropdown-item" href="<?php echo get_url('admin/create_game.php'); ?>">Create Game</a></li> <!-- new page -->
                             <li><a class="dropdown-item" href="<?php echo get_url('admin/unwatched_games.php'); ?>">Unwatched Games</a></li>
                             <li><a class="dropdown-item" href="<?php echo get_url('admin/all_associations.php'); ?>">All Watched Games</a></li>
+                            <li><a class="dropdown-item" href="<?php echo get_url('admin/admin_association_management.php'); ?>">Association Management</a></li>
                         </ul>
                     </li>
                 <?php endif; ?>

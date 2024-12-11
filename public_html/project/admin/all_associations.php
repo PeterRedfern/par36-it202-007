@@ -6,6 +6,7 @@ $game_title = se($_GET, "game_title", "", false);
 $platform = se($_GET, "platforms", "", false);
 $genres = se($_GET, "genre", "", false);
 $release_date = se($_GET, "release_date", "", false);
+$users = se($_GET, "username", "", false);
 
 $column = se($_GET, "column", "", false);
 $order = se($_GET, "order", "", false);
@@ -19,15 +20,15 @@ if (!in_array($column, $columns)) {
 }
 if (!in_array($order, ["asc", "desc"])) {
     $order = "asc";
-}
-$user_check = " (SELECT IFNULL(count(1), 0) FROM IT202_F2024_Usergames WHERE user_id = ug.user_id and game_id = g.id) as total_watched,";
+} 
+$user_check = " (SELECT count(user_id) FROM IT202_F2024_Usergames WHERE user_id = ug.user_id) as total_watched,";
 
 $params = [];
 $sql = "SELECT g.id, game_title, platforms, genre, username, $user_check release_date, 1 as is_watched
 FROM IT202_F2024_Games as g
 JOIN IT202_F2024_Usergames as ug on g.id = ug.game_id
 JOIN Users as u on u.id = ug.user_id";
-$where = "  1=1,";
+$where = " WHERE 1=1";
 
 if (!empty($game_title)) {
     $where .= " AND game_title like :game_title";
@@ -52,12 +53,15 @@ if (isset($_GET["limit"]) && !is_nan($_GET["limit"])) {
         $limit = 10;
     }
 }
+$sql .= $where;
 $sql .= " ORDER BY $column $order";
 
 $sql .= " LIMIT $limit";
 $db = getDB();
 $results = [];
 try {
+    error_log("Params: " . var_export($params, true)); 
+    error_log("SQL: " . var_export($sql, true));
     $stmt = $db->prepare($sql);
     $stmt->execute($params);
     $r = $stmt->fetchAll();
@@ -69,9 +73,11 @@ try {
     error_log("A Fetch Error Occured");
     flash("Failed to fetch");
 }
+
 error_log(var_export($results, true)); // par 36 - 12/9/24: test exports
 $platforms = get_platforms(); //used for filter dropdown
 $genre = get_genres(); // used for filter dropdown
+//$user = get_users(); 
 
 // get total possible values based on filters
 // JOINS also filter (in addition to the WHERE clause)
@@ -80,7 +86,8 @@ $total = 0;
 $sql = "SELECT COUNT(DISTINCT g.id) as c
 FROM IT202_F2024_Games as g
 JOIN IT202_F2024_Usergames as ug on g.id = ug.game_id
-JOIN Users as u on u.id = ug.user_id";
+JOIN Users as u on u.id = ug.user_id
+$where";
 try {
     $db = getDB();
     $stmt = $db->prepare($sql);
@@ -113,7 +120,7 @@ $results = array_map(function ($item) {
 }, $results);
 error_log("Games: " . var_export($results, true));
 
-$table = ["data" => $results, "edit_url" => get_url("admin/edit_game.php")]
+$table = ["data" => $results, "view_url" => get_url("display_game.php")]
 ?>
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -140,6 +147,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="col">
                     <?php render_input(["name" => "limit", "label" => "List Size (Specify 1 - 100)", "value" => $limit]); ?>
                 </div>
+                <div class="col">
+                    <?php render_input(["name" => "users", "label" => "User Search", "value" => $users]); ?>
+                </div>
 
             </div>
             <div class="row">
@@ -165,7 +175,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
     <div class="row">
         <div class="col">
-            <a class="btn btn-warning" href="api/clear_watchlist.php">Clear List</a>
+            <a class="btn btn-warning" href="/project/api/clear_watchlist.php">Clear List</a>
         </div>
     </div>
     <div class="row">

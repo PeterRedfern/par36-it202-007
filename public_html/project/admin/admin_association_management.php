@@ -7,26 +7,15 @@ if (!has_role("Admin")) {
 
 //build search form
 $form = [
+    ["type" => "text", "name" => "game_title", "placeholder" => "Game Title", "label" => "Game Title", "include_margin" => false],
     ["type" => "text", "name" => "username", "placeholder" => "Username", "label" => "Username", "include_margin" => false],
-    ["type" => "text", "name" => "name", "placeholder" => "Broker Name", "label" => "Broker Name", "include_margin" => false],
-
-    ["type" => "number", "name" => "rarity_min", "placeholder" => "Min Rarity", "label" => "Min Rarity", "include_margin" => false],
-    ["type" => "number", "name" => "rarity_max", "placeholder" => "Max Rarity", "label" => "Max Rarity", "include_margin" => false],
-
-    ["type" => "number", "name" => "stonks_min", "placeholder" => "Min Stonks", "label" => "Min Stonks", "include_margin" => false],
-    ["type" => "number", "name" => "stonks_max", "placeholder" => "Max Stonks", "label" => "Max Stonks", "include_margin" => false],
-
-    ["type" => "select", "name" => "sort", "label" => "Sort", "options" => ["name" => "Name", "rarity" => "Rarity", "life" => "Life", "power" => "Power", "defense" => "Defense", "stonks" => "Stonks (Combat Effectiveness)", "created" => "Created", "modified" => "Modified"], "include_margin" => false],
-    ["type" => "select", "name" => "order", "label" => "Order", "options" => ["asc" => "+", "desc" => "-"], "include_margin" => false],
-
-    ["type" => "number", "name" => "limit", "label" => "Limit", "value" => "10", "include_margin" => false],
 ];
 //error_log("Form data: " . var_export($form, true));
 
 
-$query = "SELECT u.username, b.id, name, rarity, life, power, defense, stonks, user_id FROM `IT202-S24-Brokers` b
-JOIN `IT202-S24-UserBrokers` ub ON b.id = ub.broker_id JOIN Users u on u.id = ub.user_id";
+$query = "SELECT u.username, FROM Users JOIN `IT202_F2024_Games` g ON g.game_title";
 
+$params = [];
 /*
 $params = [];
 $session_key = $_SERVER["SCRIPT_NAME"];
@@ -144,7 +133,7 @@ $table = [
 ];
 ?>
 <div class="container-fluid">
-    <h3>Associated Brokers</h3>
+    <h3>Association Management</h3>
     <form method="GET">
         <div class="row mb-3" style="align-items: flex-end;">
 
@@ -158,7 +147,7 @@ $table = [
         <?php render_button(["text" => "Search", "type" => "submit", "text" => "Filter"]); ?>
         <a href="?clear" class="btn btn-secondary">Clear</a>
     </form>
-    <?php render_table(count($results), $total_records); ?>
+    <?php render_table(count($results)); ?>
     <div class="row w-100 row-cols-auto row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-4">
         <?php foreach ($results as $broker) : ?>
             <div class="col">

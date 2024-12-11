@@ -35,3 +35,21 @@ function get_platforms()
     }
     return $platforms;
 }
+
+function get_users()
+{
+    $genre = [];
+    try {
+        $db = getDB();
+        $stmt = $db->prepare("SELECT DISTINCT id,username FROM Users");
+        $stmt->execute();
+        $r = $stmt->fetchAll();
+        if ($r) {
+            $genre =  array_map(fn($t) => [$t["id"] => $t["username"]], $r);
+            array_unshift($genre, ["-1" => "Select"]);
+        }
+    } catch (PDOException $e) {
+        error_log("Error fetching users: " . var_export($e, true));
+    }
+    return $genre;
+}
