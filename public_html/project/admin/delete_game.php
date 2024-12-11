@@ -11,7 +11,7 @@ $id = se($_GET, "id", -1, false); // par36 - 11/24/24: gets id variable
 function delete_req($id) {
     if ($id > -1) { // par36 - 11/23/24: checks for all ids that are 1 or greater
         $db = getDB(); // gets db
-        $query = "DELETE FROM `IT202-F2024-Games` WHERE id = :id"; // checks db for id to delete
+        $query = "DELETE FROM `IT202_F2024_Games` WHERE id = :id"; // checks db for id to delete
         try {
             $deletereq = $db->prepare($query); // prepares delete query
             $deletereq->execute([":id" => $id]); // executes query

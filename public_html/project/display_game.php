@@ -1,6 +1,6 @@
 <?php
 //note we need to go up 1 more directory
-require(__DIR__ . "/../../../partials/nav.php");
+require(__DIR__ . "/../../partials/nav.php");
 
 $id = se($_GET, "id", -1, false);
 if (isset($_POST["delete"])) { // par36 - 11/23/24: makes delete query
@@ -42,7 +42,7 @@ $game = [];
 if ($id > -1) { // par36 - 11/25/24: gets id for many page purposes
     //fetch
     $db = getDB();
-    $query = "SELECT id, game_title, platforms, genre, release_date  FROM `IT202-F2024-Games` WHERE id = :id";
+    $query = "SELECT id, game_title, platforms, genre, release_date  FROM `IT202_F2024_Games` WHERE id = :id";
     try {
         $stmt = $db->prepare($query);
         $stmt->execute([":id" => $id]);
@@ -56,7 +56,7 @@ if ($id > -1) { // par36 - 11/25/24: gets id for many page purposes
     }
 } else {
     flash("Invalid id passed", "danger");
-    die(header("Location: $BASE_PATH" . "/admin/list_games.php")); // redirects to list_games when failed
+    die(header("Location: $BASE_PATH" . "list_games.php")); // redirects to list_games when failed
 }
 
 if ($game) {
@@ -103,5 +103,5 @@ if ($game) {
 
 <?php
 //note we need to go up 1 more directory
-require_once(__DIR__ . "/../../../partials/flash.php");
+require_once(__DIR__ . "/../../partials/flash.php");
 ?>
