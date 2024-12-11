@@ -2,8 +2,17 @@
 require(__DIR__ . "/../../../partials/nav.php");
 if (!has_role("Admin")) {
     flash("You don't have permission to view this page", "warning");
-    die(header("home.php"));
+    die(header("Location: $BASE_PATH" . "/home.php"));
 }
+
+/* 
+par36 - 12/11/24
+
+IMPORTANT:
+Overall, this page is incomplete due to time constraints
+It renders a few text boxes but is in a non-working state
+Many building blocks for potential solutions are included but not fully fleshed out/working
+*/
 
 //build search form
 $form = [
@@ -14,122 +23,61 @@ $form = [
 
 
 $query = "SELECT u.username, FROM Users JOIN `IT202_F2024_Games` g ON g.game_title";
-
 $params = [];
-/*
-$params = [];
-$session_key = $_SERVER["SCRIPT_NAME"];
-$is_clear = isset($_GET["clear"]);
-if ($is_clear) {
-    session_destroy($session_key);
-    unset($_GET["clear"]);
-    reset_session($session_key);
-} else {
-    $session_data = session_start($session_key);
-}
-
-if (count($_GET) == 0 && isset($session_data) && count($session_data) > 0) {
-    if ($session_data) {
-        $_GET = $session_data;
-    }
-}
-if (count($_GET) > 0) {
-    session_start($session_key, $_GET);
-    $keys = array_keys($_GET);
-
-    foreach ($form as $k => $v) {
-        if (in_array($v["name"], $keys)) {
-            $form[$k]["value"] = $_GET[$v["name"]];
-        }
-    }
-    //username
-    $username = se($_GET, "username", "", false);
-    if (!empty($username)) {
-        $query .= " AND u.username like :username";
-        $params[":username"] = "%$username%";
-    }
-    //name
-    $name = se($_GET, "name", "", false);
-    if (!empty($name)) {
-        $query .= " AND name like :name";
-        $params[":name"] = "%$name%";
-    }
-    //rarity range
-    $rarity_min = se($_GET, "rarity_min", "-1", false);
-    if (!empty($rarity_min) && $rarity_min > -1) {
-        $query .= " AND rarity >= :rarity_min";
-        $params[":rarity_min"] = $rarity_min;
-    }
-    $rarity_max = se($_GET, "rarity_max", "-1", false);
-    if (!empty($rarity_max) && $rarity_max > -1) {
-        $query .= " AND rarity <= :rarity_max";
-        $params[":rarity_max"] = $rarity_max;
-    }
-    //stonks range
-    $stonks_min = se($_GET, "stonks_min", "", false);
-    if (!empty($stonks_min) && $stonks_min != "") {
-        $query .= " AND stonks >= :stonks_min";
-        $params[":stonks_min"] = $stonks_min;
-    }
-    $stonks_max = se($_GET, "stonks_max", "", false);
-    if (!empty($stonks_max) && $stonks_max != "") {
-        $query .= " AND stonks <= :stonks_max";
-        $params[":stonks_max"] = $stonks_max;
-    }
-
-    //sort and order
-    $sort = se($_GET, "sort", "created", false);
-    if (!in_array($sort, ["name", "rarity", "life", "power", "defense", "stonks", "created", "modified"])) {
-        $sort = "created";
-    }
-    //tell mysql I care about the data from table "b"
-    if ($sort === "created" || $sort === "modified") {
-        $sort = "b." . $sort;
-    }
-    $order = se($_GET, "order", "desc", false);
-    if (!in_array($order, ["asc", "desc"])) {
-        $order = "desc";
-    }
-    //IMPORTANT make sure you fully validate/trust $sort and $order (sql injection possibility)
-    $query .= " ORDER BY $sort $order";
-    //limit
-    try {
-        $limit = (int)se($_GET, "limit", "10", false);
-    } catch (Exception $e) {
-        $limit = 10;
-    }
-    if ($limit < 1 || $limit > 100) {
-        $limit = 10;
-    }
-    //IMPORTANT make sure you fully validate/trust $limit (sql injection possibility)
-    $query .= " LIMIT $limit";
-}
-*/
-
-$db = getDB();
-$stmt = $db->prepare($query);
 $results = [];
-try {
-    $stmt->execute($params);
-    $r = $stmt->fetchAll();
-    if ($r) {
-        $results = $r;
-    }
-} catch (PDOException $e) {
-    error_log("Error fetching stocks " . var_export($e, true));
-    flash("Unhandled error occurred", "danger");
-}
-foreach ($results as $index => $broker) {
-    foreach ($broker as $key => $value) {
-        if (is_null($value)) {
-            $results[$index][$key] = "N/A";
+
+
+//attempt to apply
+if (isset($_POST["users"]) && isset($_POST["games"])) {
+    $user_ids = $_POST["users"]; //se() doesn't like arrays so we'll just do this
+    $game_ids = $_POST["games"]; //se() doesn't like arrays so we'll just do this
+    if (empty($user_ids) || empty($role_ids)) {
+        flash("Both users and games need to be selected", "warning");
+    } else {
+        //for sake of simplicity, this will be a tad inefficient
+        $db = getDB();
+        $stmt = $db->prepare("INSERT INTO IT202_F2024_UserGames (user_id, game_id) VALUES (:uid, :gid)");
+        foreach ($user_ids as $uid) {
+            foreach ($game_ids as $gid) {
+                try {
+                    $stmt->execute([":uid" => $uid, ":gid" => $gid]);
+                    flash("Updated Game Association", "success");
+                } catch (PDOException $e) {
+                    flash(var_export($e->errorInfo, true), "danger");
+                }
+            }
         }
+    }
+}
+
+//search for user by username
+$users = [];
+$username = "";
+if (isset($_POST["username"])) {
+    $username = se($_POST, "username", "", false);
+    if (!empty($username)) {
+        $db = getDB();
+        $stmt = $db->prepare("SELECT Users.id, username, 
+        (SELECT GROUP_CONCAT(name, ' (' , IF(ur.is_active = 1,'active','inactive') , ')') from 
+        UserRoles ur JOIN Roles on ur.role_id = Roles.id WHERE ur.user_id = Users.id) as roles
+        from Users WHERE username like :username");
+        try {
+            $stmt->execute([":username" => "%$username%"]);
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if ($results) {
+                $users = $results;
+            }
+        } catch (PDOException $e) {
+            flash(var_export($e->errorInfo, true), "danger");
+        }
+    } else {
+        flash("Username must not be empty", "warning");
     }
 }
 
 $table = [
-    "data" => $results, "title" => "Brokers", "ignored_columns" => ["id"],
-    "view_url" => get_url("broker.php"),
+    "data" => $results, "title" => "Users", "ignored_columns" => ["id"],
+    "view_url" => get_url("profile.php"),
 ];
 ?>
 <div class="container-fluid">
@@ -149,9 +97,9 @@ $table = [
     </form>
     <?php render_table(count($results)); ?>
     <div class="row w-100 row-cols-auto row-cols-sm-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-4">
-        <?php foreach ($results as $broker) : ?>
+        <?php foreach ($results as $user) : ?>
             <div class="col">
-                <?php render_table($broker); ?>
+                <?php render_table($user); ?>
             </div>
         <?php endforeach; ?>
         <?php if (count($results) === 0) : ?>
