@@ -24,7 +24,7 @@ if (!in_array($order, ["asc", "desc"])) {
 $user_check = " (SELECT count(user_id) FROM IT202_F2024_Usergames WHERE user_id = ug.user_id) as total_watched,";
 
 $params = [];
-$sql = "SELECT g.id, game_title, platforms, genre, username, $user_check release_date, 1 as is_watched
+$sql = "SELECT g.id, game_title, platforms, genre, username, $user_check release_date, 1 as is_watched, user_id
 FROM IT202_F2024_Games as g
 JOIN IT202_F2024_Usergames as ug on g.id = ug.game_id
 JOIN Users as u on u.id = ug.user_id";
@@ -45,6 +45,10 @@ if (!empty($genres) && $genres != "-1") {
 if (!empty($release_date)) {
     $where .= " AND release_date like :release_date";
     $params[":release_date"] = "%$release_date%";
+}
+if(!empty($users)) {
+    $where .= " AND username like :users";
+    $params[":users"] = "%$users%";
 }
 $limit = 10;
 if (isset($_GET["limit"]) && !is_nan($_GET["limit"])) {
@@ -148,8 +152,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <?php render_input(["name" => "limit", "label" => "List Size (Specify 1 - 100)", "value" => $limit]); ?>
                 </div>
                 <div class="col">
-                    <?php render_input(["name" => "users", "label" => "User Search", "value" => $users]); ?>
+                    <?php render_input(["name" => "username", "label" => "User Search", "value" => $users]); ?>
                 </div>
+                    
 
             </div>
             <div class="row">

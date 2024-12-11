@@ -65,8 +65,12 @@
                 <?php foreach ($_data as $row) : ?>
                     <tr>
                         <?php foreach ($row as $k => $v) : ?>
-                            <?php if (!in_array($k, $_ignored_columns)) : ?>
-                                <td><?php se($v); ?></td>
+                            <?php if ($k == "username"): ?>
+                                <td><a href="<?php echo get_url("profile.php") . "?id=" . $row["user_id"]; ?>"><?php se($row, "username"); ?></a></td>
+                            <?php else: ?>
+                                <?php if (!in_array($k, $_ignored_columns)): ?>
+                                    <td><?php se($v); ?></td>
+                                <?php endif; ?>
                             <?php endif; ?>
                         <?php endforeach; ?>
                         <?php if ($_has_atleast_one_url) : ?>
@@ -92,18 +96,18 @@
                         <?php endif; ?>
                         <?php if (is_logged_in() && isset($row["is_watched"])): ?>
                             <td>
-                            <?php /* is_watched toggle */
-                            $redirect_url = se($_SERVER, "PHP_SELF", "", false) . '?' . http_build_query($_GET);
-                            ?>
-                            <form method="POST" action="<?php echo get_url("api/toggle_watched.php"); ?>">
-                                <input type="hidden" name="game_id" value="<?php se($row, "id"); ?>" />
-                                <input type="hidden" name="toggleWatched" />
-                                <input type="hidden" name="route" value="<?php echo $redirect_url ?>" />
-                                <button style="background-color: transparent; border: none !important;">
-                                    <?php render_like(["value" => $row["is_watched"]]); ?>
-                                </button>
-                            </form>
-                        </td>
+                                <?php /* is_watched toggle */
+                                $redirect_url = se($_SERVER, "PHP_SELF", "", false) . '?' . http_build_query($_GET);
+                                ?>
+                                <form method="POST" action="<?php echo get_url("api/toggle_watched.php"); ?>">
+                                    <input type="hidden" name="game_id" value="<?php se($row, "id"); ?>" />
+                                    <input type="hidden" name="toggleWatched" />
+                                    <input type="hidden" name="route" value="<?php echo $redirect_url ?>" />
+                                    <button style="background-color: transparent; border: none !important;">
+                                        <?php render_like(["value" => $row["is_watched"]]); ?>
+                                    </button>
+                                </form>
+                            </td>
                         <?php endif; ?>
                     </tr>
                 <?php endforeach; ?>
