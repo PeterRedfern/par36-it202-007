@@ -14,7 +14,7 @@ It renders a few text boxes but is in a non-working state
 Many building blocks for potential solutions are included but not fully fleshed out/working
 */
 
-//build search form
+// par36 - 12/11/24: forms for taking in username and game title
 $form = [
     ["type" => "text", "name" => "game_title", "placeholder" => "Game Title", "label" => "Game Title", "include_margin" => false],
     ["type" => "text", "name" => "username", "placeholder" => "Username", "label" => "Username", "include_margin" => false],
@@ -50,7 +50,7 @@ if (isset($_POST["users"]) && isset($_POST["games"])) {
     }
 }
 
-//search for user by username
+// par36 - 12/11/24: attempt to search for user by username
 $users = [];
 $username = "";
 if (isset($_POST["username"])) {

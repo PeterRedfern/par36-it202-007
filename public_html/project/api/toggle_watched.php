@@ -1,7 +1,7 @@
 <?php
 session_start();
 require(__DIR__ . "/../../../lib/functions.php");
-
+// par36 - 12/11/24: associates the watched game with the user in the Usergames table
 if (isset($_POST["toggleWatched"])) {
     $gameId = se($_POST, "game_id", -1, false);
     $userId = get_user_id();

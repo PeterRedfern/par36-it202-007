@@ -8,7 +8,7 @@ if(!has_role("Admin") && $user_id != get_user_id()){
     $user_id = get_user_id();
 }
 
-try{
+try{ // par36 - 12/11/24: deletes all associated records based on user id
     $db = getDB();
     $query = "DELETE FROM IT202_F2024_Usergames WHERE user_id = :user_id";
     $params = [":user_id"=>$user_id];
@@ -28,9 +28,3 @@ if(empty($refer)){
     $refer = get_url("watchlist.php");
 }
 die(header("Location: $refer"));
-
-// for another file - 12/6/24
-/*if(has_role("Admin")) {
-    $table["edit_url"] = "xyz";
-}
-*/
